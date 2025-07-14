@@ -9,7 +9,7 @@ classifiers = [
 ]
 
 [project.urls]
-Repository = "https://github.com/yawiii/comfyui_prompt_assistant"
+Repository = "https://github.com/yawiii/comfyui_group_assistant"
 
 
 [tool.setuptools.dynamic]
