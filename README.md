@@ -7,6 +7,9 @@
 
 Group Assistant solves the problem that the native group function of ComfyUI mistakenly drags irrelevant nodes when dragging. It also realizes the automatic adjustment of group boundaries, making node arrangement neat and orderly. This makes the group function more useful.
 
+简介晚点再补充~😄
+
+
 ## ✨ 功能特性
 
 ### 🎯 核心功能
