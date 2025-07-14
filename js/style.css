@@ -6,7 +6,7 @@
 /* 1. 主按钮 (Split Button)
 /* -------------------------------------------------------------------------- */
 
-.p-splitbutton {
+.group-assistant-ui-container .p-splitbutton {
     display: inline-flex;
     position: relative;
     align-items: stretch;
@@ -14,7 +14,7 @@
 }
 
 /* 主功能按钮 */
-.p-splitbutton .p-splitbutton-defaultbutton {
+.group-assistant-ui-container .p-splitbutton .p-splitbutton-defaultbutton {
     flex: 0 0 auto;
     border-top-right-radius: 0;
     border-bottom-right-radius: 0;
@@ -27,7 +27,7 @@
 }
 
 /* 下拉菜单触发按钮 */
-.p-splitbutton .p-splitbutton-menubutton {
+.group-assistant-ui-container .p-splitbutton .p-splitbutton-menubutton {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -37,18 +37,18 @@
 }
 
 /* 按钮启用/禁用状态颜色 */
-.p-splitbutton.enabled .p-splitbutton-defaultbutton {
+.group-assistant-ui-container .p-splitbutton.enabled .p-splitbutton-defaultbutton {
     background-color: #4CAF50;
     /* 启用时为绿色 */
 }
 
-.p-splitbutton.disabled .p-splitbutton-defaultbutton {
+.group-assistant-ui-container .p-splitbutton.disabled .p-splitbutton-defaultbutton {
     background-color: var(--primary-bg);
     /* 禁用时为默认背景色 */
 }
 
-.p-splitbutton.enabled .p-splitbutton-defaultbutton:hover,
-.p-splitbutton.disabled .p-splitbutton-defaultbutton:hover {
+.group-assistant-ui-container .p-splitbutton.enabled .p-splitbutton-defaultbutton:hover,
+.group-assistant-ui-container .p-splitbutton.disabled .p-splitbutton-defaultbutton:hover {
     background-color: var(--primary-hover-bg);
     /* 悬浮时颜色 */
 }
@@ -58,7 +58,7 @@
 /* 2. 下拉菜单 (Dropdown Menu)
 /* -------------------------------------------------------------------------- */
 
-.p-splitbutton-menu {
+.group-assistant-ui-container .p-splitbutton-menu {
     position: absolute;
     top: 100%;
     left: 50%;
@@ -80,12 +80,12 @@
 }
 
 /* 禁用加载时的初始动画 */
-.p-splitbutton-menu.no-transition {
+.group-assistant-ui-container .p-splitbutton-menu.no-transition {
     transition: none !important;
 }
 
 /* 菜单激活状态 */
-.p-splitbutton-menu.p-splitbutton-menu-active {
+.group-assistant-ui-container .p-splitbutton-menu.p-splitbutton-menu-active {
     visibility: visible;
     opacity: 1;
     transform: translateX(-50%) translateY(0);
@@ -94,7 +94,7 @@
 }
 
 /* 菜单项通用样式 */
-.p-splitbutton-menuitem {
+.group-assistant-ui-container .p-splitbutton-menuitem {
     padding: 0 1rem;
     height: 40px;
     cursor: pointer;
@@ -107,15 +107,15 @@
     gap: 6px;
 }
 
-.p-splitbutton-menuitem:last-child {
+.group-assistant-ui-container .p-splitbutton-menuitem:last-child {
     margin-bottom: 0;
 }
 
-.p-splitbutton-menuitem:hover {
+.group-assistant-ui-container .p-splitbutton-menuitem:hover {
     background-color: var(--comfy-menu-bg);
 }
 
-.p-splitbutton-menuitem .p-menuitem-icon {
+.group-assistant-ui-container .p-splitbutton-menuitem .p-menuitem-icon {
     margin-right: 0.5rem;
     width: 1rem;
     height: 1rem;
@@ -177,7 +177,7 @@
 }
 
 /* 灵敏度滑块 */
-.sensitivity-control {
+.group-assistant-ui-container .sensitivity-control {
     display: flex;
     align-items: center;
     gap: 6px;
@@ -187,29 +187,29 @@
     /* 禁用容器的点击手势 */
 }
 
-.sensitivity-control:hover {
+.group-assistant-ui-container .sensitivity-control:hover {
     background-color: transparent !important;
     /* 禁用悬浮背景色 */
 }
 
-.sensitivity-control .sensitivity-label-text,
-.sensitivity-control .sensitivity-value {
+.group-assistant-ui-container .sensitivity-control .sensitivity-label-text,
+.group-assistant-ui-container .sensitivity-control .sensitivity-value {
     color: var(--input-text);
     flex-shrink: 0;
     cursor: default;
 }
 
-.sensitivity-control .sensitivity-value {
+.group-assistant-ui-container .sensitivity-control .sensitivity-value {
     width: 3em;
     text-align: right;
 }
 
-.sensitivity-control .p-slider-container {
+.group-assistant-ui-container .sensitivity-control .group-assistant-slider-container {
     flex-grow: 1;
     margin: 0 8px;
 }
 
-.sensitivity-control .p-slider {
+.group-assistant-ui-container .sensitivity-control .group-assistant-slider {
     position: relative;
     height: 4px;
     background: var(--comfy-input-bg);
@@ -218,21 +218,21 @@
     /* 轨道可点击 */
 }
 
-.sensitivity-control .p-slider-range {
+.group-assistant-ui-container .sensitivity-control .group-assistant-slider-range {
     position: absolute;
     height: 100%;
-    background: c;
+    background: var(--p-button-primary-background);
     border-radius: 2px;
     pointer-events: none;
     /* 确保点击事件在轨道上触发 */
 }
 
-.sensitivity-control .p-slider-handle {
+.group-assistant-ui-container .sensitivity-control .group-assistant-slider-handle {
     position: absolute;
     top: 50%;
     width: 16px;
     height: 16px;
-    background: white;
+    background-color: white;
     border: 2px solid var(--comfy-input-bg);
     border-radius: 50%;
     transform: translate(-50%, -50%);
@@ -241,14 +241,14 @@
     box-sizing: border-box;
 }
 
-.sensitivity-control .p-slider-handle:active {
+.group-assistant-ui-container .sensitivity-control .group-assistant-slider-handle:active {
     cursor: grabbing;
     /* 正在抓取 */
 }
 
 
 /* 灵敏度输入框样式 */
-.sensitivity-control .sensitivity-value-container {
+.group-assistant-ui-container .sensitivity-control .sensitivity-value-container {
     display: flex;
     align-items: center;
     width: 4.5em;
@@ -260,7 +260,7 @@
     box-sizing: border-box;
 }
 
-.sensitivity-control .sensitivity-value-input {
+.group-assistant-ui-container .sensitivity-control .sensitivity-value-input {
     width: 100%;
     background: transparent;
     border: none;
@@ -274,19 +274,19 @@
     /* Firefox */
 }
 
-.sensitivity-control .sensitivity-value-input::-webkit-outer-spin-button,
-.sensitivity-control .sensitivity-value-input::-webkit-inner-spin-button {
+.group-assistant-ui-container .sensitivity-control .sensitivity-value-input::-webkit-outer-spin-button,
+.group-assistant-ui-container .sensitivity-control .sensitivity-value-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-.sensitivity-control .sensitivity-value-container span {
+.group-assistant-ui-container .sensitivity-control .sensitivity-value-container span {
     color: var(--input-text);
     user-select: none;
 }
 
 /* 自动开启开关 */
-.group-assistant-toggleswitch {
+.group-assistant-ui-container .group-assistant-toggleswitch {
     display: inline-block;
     position: relative;
     width: 40px;
@@ -294,7 +294,7 @@
     margin-left: auto;
 }
 
-.group-assistant-toggleswitch .group-assistant-toggleswitch-slider {
+.group-assistant-ui-container .group-assistant-toggleswitch .group-assistant-toggleswitch-slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -306,7 +306,7 @@
     transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
-.group-assistant-toggleswitch .group-assistant-toggleswitch-slider:before {
+.group-assistant-ui-container .group-assistant-toggleswitch .group-assistant-toggleswitch-slider:before {
     position: absolute;
     content: "";
     height: 16px;
@@ -319,20 +319,20 @@
     transform: translateY(-50%);
 }
 
-.group-assistant-toggleswitch.group-assistant-toggleswitch-checked .group-assistant-toggleswitch-slider {
+.group-assistant-ui-container .group-assistant-toggleswitch.group-assistant-toggleswitch-checked .group-assistant-toggleswitch-slider {
     background: var(--p-button-primary-background);
 }
 
-.group-assistant-toggleswitch.group-assistant-toggleswitch-checked .group-assistant-toggleswitch-slider:before {
+.group-assistant-ui-container .group-assistant-toggleswitch.group-assistant-toggleswitch-checked .group-assistant-toggleswitch-slider:before {
     transform: translateX(16px) translateY(-50%);
     background: var(--p-panel-background);
 }
 
-.group-assistant-toggleswitch:not(.p-disabled):hover .group-assistant-toggleswitch-slider {
+.group-assistant-ui-container .group-assistant-toggleswitch:not(.p-disabled):hover .group-assistant-toggleswitch-slider {
     border-color: var(--border-color-hover);
 }
 
-.group-assistant-toggleswitch.group-assistant-toggleswitch-checked:not(.p-disabled):hover .group-assistant-toggleswitch-slider {
+.group-assistant-ui-container .group-assistant-toggleswitch.group-assistant-toggleswitch-checked:not(.p-disabled):hover .group-assistant-toggleswitch-slider {
     background: var(--primary-hover-bg);
 }
 

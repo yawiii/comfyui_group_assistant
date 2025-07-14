@@ -442,16 +442,19 @@ function createSensitivityControl() {
     label.textContent = i18n.t("sensitivity");
 
     const sliderContainer = document.createElement('div');
-    sliderContainer.className = 'p-slider-container';
+    sliderContainer.className = 'group-assistant-slider-container';
     const slider = document.createElement('div');
-    slider.className = 'p-slider';
+    slider.className = 'group-assistant-slider';
+    const range = document.createElement('span');
+    range.className = 'group-assistant-slider-range';
+    const handle = document.createElement('span');
+    handle.className = 'group-assistant-slider-handle';
+    slider.append(range, handle);
 
     const updateSliderUI = (sensitivity) => {
         const percent = sensitivity * 100;
-        slider.innerHTML = `
-            <span class="p-slider-range" style="width: ${percent}%"></span>
-            <span class="p-slider-handle" style="left: ${percent}%"></span>
-        `;
+        range.style.width = `${percent}%`;
+        handle.style.left = `${percent}%`;
     };
     updateSliderUI(state.overlapSensitivity);
 
@@ -480,10 +483,8 @@ function createSensitivityControl() {
         updateInputUI(sensitivity);
     });
 
-    const sliderHandle = slider.querySelector('.p-slider-handle');
-
     slider.addEventListener('mousedown', (e) => {
-        if (e.button !== 0 || e.target === sliderHandle) return;
+        if (e.button !== 0 || e.target === handle) return;
         const rect = slider.getBoundingClientRect();
         if (rect.width > 0) {
             const sensitivity = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
@@ -491,36 +492,25 @@ function createSensitivityControl() {
         }
     });
 
-    sliderHandle.addEventListener('mousedown', (e) => {
+    handle.addEventListener('mousedown', (e) => {
         if (e.button !== 0) return;
         e.stopPropagation();
         e.preventDefault(); // 防止文本选择
 
-        // 获取初始位置
         const sliderRect = slider.getBoundingClientRect();
-        const sliderWidth = sliderRect.width;
-        if (sliderWidth === 0) return;
-
-        // 计算初始偏移量，使拖动更精确
-        const handleRect = sliderHandle.getBoundingClientRect();
-        const offsetX = e.clientX - handleRect.left;
+        if (sliderRect.width === 0) return;
 
         const onDrag = (moveEvent) => {
             moveEvent.preventDefault(); // 防止在拖动过程中选择文本
-            const rect = slider.getBoundingClientRect();
-            // 考虑初始偏移量，使拖动更加精确
-            const sensitivity = Math.max(0, Math.min(1, (moveEvent.clientX - rect.left - offsetX + handleRect.width / 2) / rect.width));
+            const sensitivity = Math.max(0, Math.min(1, (moveEvent.clientX - sliderRect.left) / sliderRect.width));
             updateState({ overlapSensitivity: sensitivity });
         };
 
         const onDragEnd = () => {
             document.removeEventListener('mousemove', onDrag);
             document.removeEventListener('mouseup', onDragEnd);
-            document.body.style.cursor = ''; // 恢复默认光标
         };
 
-        // 设置拖动时的光标样式
-        document.body.style.cursor = 'grabbing';
         document.addEventListener('mousemove', onDrag);
         document.addEventListener('mouseup', onDragEnd);
     });
