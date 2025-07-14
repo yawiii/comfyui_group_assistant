@@ -10,6 +10,7 @@
     display: inline-flex;
     position: relative;
     align-items: stretch;
+    height: var(--comfy-menu-height, 30px);
 }
 
 /* 主功能按钮 */
@@ -22,7 +23,6 @@
     justify-content: center;
     align-items: center;
     width: 42px;
-    padding: 0;
     color: var(--primary-fg) !important;
 }
 
