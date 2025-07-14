@@ -1,0 +1,431 @@
+/* ==========================================================================
+   阿组小助手 (ComfyUI Group Assistant) 插件样式表
+   ========================================================================== */
+
+/* -------------------------------------------------------------------------- */
+/* 1. 主按钮 (Split Button)
+/* -------------------------------------------------------------------------- */
+
+.p-splitbutton {
+    display: inline-flex;
+    position: relative;
+    align-items: stretch;
+}
+
+/* 主功能按钮 */
+.p-splitbutton .p-splitbutton-defaultbutton {
+    flex: 0 0 auto;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    border-right: 0 none;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 42px;
+    padding: 0;
+    color: var(--primary-fg) !important;
+}
+
+/* 下拉菜单触发按钮 */
+.p-splitbutton .p-splitbutton-menubutton {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+    width: 30px;
+}
+
+/* 按钮启用/禁用状态颜色 */
+.p-splitbutton.enabled .p-splitbutton-defaultbutton {
+    background-color: #4CAF50;
+    /* 启用时为绿色 */
+}
+
+.p-splitbutton.disabled .p-splitbutton-defaultbutton {
+    background-color: var(--primary-bg);
+    /* 禁用时为默认背景色 */
+}
+
+.p-splitbutton.enabled .p-splitbutton-defaultbutton:hover,
+.p-splitbutton.disabled .p-splitbutton-defaultbutton:hover {
+    background-color: var(--primary-hover-bg);
+    /* 悬浮时颜色 */
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* 2. 下拉菜单 (Dropdown Menu)
+/* -------------------------------------------------------------------------- */
+
+.p-splitbutton-menu {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    z-index: 1000;
+    width: 350px;
+    background: var(--p-content-background);
+    border: 1px solid var(--p-menubar-submenu-border-color);
+    border-radius: 8px;
+    box-shadow: 0 2px 4px var(--p-menubar-submenu-shadow);
+    margin-top: 2px;
+    overflow: hidden;
+    padding: 6px;
+    box-sizing: border-box;
+    visibility: hidden;
+    opacity: 0;
+    transform: translateX(-50%) translateY(-10px);
+    transition: transform 0.15s ease-out, opacity 0.15s ease-out, visibility 0s 0.15s;
+    pointer-events: none;
+}
+
+/* 禁用加载时的初始动画 */
+.p-splitbutton-menu.no-transition {
+    transition: none !important;
+}
+
+/* 菜单激活状态 */
+.p-splitbutton-menu.p-splitbutton-menu-active {
+    visibility: visible;
+    opacity: 1;
+    transform: translateX(-50%) translateY(0);
+    transition-delay: 0s;
+    pointer-events: auto;
+}
+
+/* 菜单项通用样式 */
+.p-splitbutton-menuitem {
+    padding: 0 1rem;
+    height: 40px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    color: var(--input-text);
+    transition: background-color 0.2s;
+    border-radius: 4px;
+    margin-bottom: 4px;
+    gap: 6px;
+}
+
+.p-splitbutton-menuitem:last-child {
+    margin-bottom: 0;
+}
+
+.p-splitbutton-menuitem:hover {
+    background-color: var(--comfy-menu-bg);
+}
+
+.p-splitbutton-menuitem .p-menuitem-icon {
+    margin-right: 0.5rem;
+    width: 1rem;
+    height: 1rem;
+    flex-shrink: 0;
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* 3. 菜单内容 (Menu Content)
+/* -------------------------------------------------------------------------- */
+
+/* 插件信息行 */
+.p-splitbutton-menuitem.info-row {
+    flex-direction: column;
+    align-items: flex-start;
+    height: auto;
+    padding: 10px 1rem;
+    justify-content: center;
+    cursor: default;
+    background-color: color-mix(in srgb, var(--comfy-menu-secondary-bg), transparent 50%);
+    margin: 0 0 4px 0;
+    border-radius: 4px;
+}
+
+.info-row .plugin-title-container {
+    display: flex;
+    align-items: flex-end;
+    gap: 8px;
+    width: 100%;
+}
+
+.info-row .plugin-name {
+    font-weight: bold;
+    font-size: 16px;
+}
+
+.info-row .plugin-version {
+    font-size: 12px;
+    color: var(--p-text-muted-color);
+    margin-left: auto;
+}
+
+.info-row .badges-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.info-row .badges-container img {
+    height: 20px;
+    display: block;
+}
+
+.info-row-separator {
+    width: 100%;
+    height: 1px;
+    background-color: var(--p-content-border-color);
+    margin: 8px 0;
+}
+
+/* 灵敏度滑块 */
+.sensitivity-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 16px !important;
+    /* 移除垂直内边距，确保与其他菜单项垂直对齐 */
+    cursor: default !important;
+    /* 禁用容器的点击手势 */
+}
+
+.sensitivity-control:hover {
+    background-color: transparent !important;
+    /* 禁用悬浮背景色 */
+}
+
+.sensitivity-control .sensitivity-label-text,
+.sensitivity-control .sensitivity-value {
+    color: var(--input-text);
+    flex-shrink: 0;
+    cursor: default;
+}
+
+.sensitivity-control .sensitivity-value {
+    width: 3em;
+    text-align: right;
+}
+
+.sensitivity-control .p-slider-container {
+    flex-grow: 1;
+    margin: 0 8px;
+}
+
+.sensitivity-control .p-slider {
+    position: relative;
+    height: 4px;
+    background: var(--comfy-input-bg);
+    border-radius: 2px;
+    cursor: pointer;
+    /* 轨道可点击 */
+}
+
+.sensitivity-control .p-slider-range {
+    position: absolute;
+    height: 100%;
+    background: c;
+    border-radius: 2px;
+    pointer-events: none;
+    /* 确保点击事件在轨道上触发 */
+}
+
+.sensitivity-control .p-slider-handle {
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    background: white;
+    border: 2px solid var(--comfy-input-bg);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    /* 句柄可抓取 */
+    box-sizing: border-box;
+}
+
+.sensitivity-control .p-slider-handle:active {
+    cursor: grabbing;
+    /* 正在抓取 */
+}
+
+
+/* 灵敏度输入框样式 */
+.sensitivity-control .sensitivity-value-container {
+    display: flex;
+    align-items: center;
+    width: 4.5em;
+    /* 调整宽度以容纳3位数字和百分号 */
+    background: var(--p-inputtext-background);
+    border: 1px solid var(--p-inputtext-border-color);
+    border-radius: 4px;
+    padding: 2px 6px;
+    box-sizing: border-box;
+}
+
+.sensitivity-control .sensitivity-value-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--input-text);
+    text-align: right;
+    padding-right: 2px;
+    font-size: inherit;
+    font-family: inherit;
+    -moz-appearance: textfield;
+    /* Firefox */
+}
+
+.sensitivity-control .sensitivity-value-input::-webkit-outer-spin-button,
+.sensitivity-control .sensitivity-value-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.sensitivity-control .sensitivity-value-container span {
+    color: var(--input-text);
+    user-select: none;
+}
+
+/* 自动开启开关 */
+.group-assistant-toggleswitch {
+    display: inline-block;
+    position: relative;
+    width: 40px;
+    height: 24px;
+    margin-left: auto;
+}
+
+.group-assistant-toggleswitch .group-assistant-toggleswitch-slider {
+    position: absolute;
+    cursor: pointer;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--comfy-input-bg);
+    border-radius: 30px;
+    transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
+}
+
+.group-assistant-toggleswitch .group-assistant-toggleswitch-slider:before {
+    position: absolute;
+    content: "";
+    height: 16px;
+    width: 16px;
+    left: 4px;
+    top: 50%;
+    border-radius: 50%;
+    background-color: var(--primary-fg);
+    transition: transform 0.2s, background-color 0.2s;
+    transform: translateY(-50%);
+}
+
+.group-assistant-toggleswitch.group-assistant-toggleswitch-checked .group-assistant-toggleswitch-slider {
+    background: var(--p-button-primary-background);
+}
+
+.group-assistant-toggleswitch.group-assistant-toggleswitch-checked .group-assistant-toggleswitch-slider:before {
+    transform: translateX(16px) translateY(-50%);
+    background: var(--p-panel-background);
+}
+
+.group-assistant-toggleswitch:not(.p-disabled):hover .group-assistant-toggleswitch-slider {
+    border-color: var(--border-color-hover);
+}
+
+.group-assistant-toggleswitch.group-assistant-toggleswitch-checked:not(.p-disabled):hover .group-assistant-toggleswitch-slider {
+    background: var(--primary-hover-bg);
+}
+
+
+/* -------------------------------------------------------------------------- */
+/* 4. 图标 (Icons)
+/* -------------------------------------------------------------------------- */
+
+/* 通用下拉箭头图标 */
+.p-splitbutton .p-icon {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    background-color: currentColor;
+    mask-image: url("data:image/svg+xml,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3e%3cpath d='M11.9997 13.1714L16.9495 8.22168L18.3637 9.63589L11.9997 15.9999L5.63574 9.63589L7.04996 8.22168L11.9997 13.1714Z'%3e%3c/path%3e%3c/svg%3e");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: 100%;
+}
+
+/* 主按钮的超级组图标 */
+.p-splitbutton-group-assistant-icon {
+    display: inline-block;
+    width: 1.2rem;
+    height: 1.2rem;
+    background-color: currentColor;
+    mask-image: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" fill="none" version="1.1" width="200.2748260498047" height="180" viewBox="0 0 200.2748260498047 180"><g><path d="M117.406,2.7494C117.252,1.3325,116.192,0.206985,114.843,0.026123C113.221,-0.193657,111.734,0.997566,111.52,2.68914L110.913,7.55289C109.35,19.9339,100.616,30.0202,88.9653,32.8966L85.969,33.6402C84.2184,34.0709,82.9863,35.7074,83.0001,37.5833C83.014,39.4594,84.2701,41.0759,86.0268,41.4784L88.9653,42.1518C100.584,44.8344,109.345,54.8244,110.874,67.1341L111.529,72.3691C111.751,73.895,113.017,75.0173,114.497,74.9998C115.977,74.9817,117.218,73.8296,117.406,72.2992L117.888,67.6761C119.211,55.103,128.097,44.8223,139.951,42.1518L142.956,41.4784C144.723,41.0822,145.988,39.459,146,37.5745C146.011,35.6899,144.766,34.0501,143.005,33.6302L139.951,32.8966C128.063,30.0308,119.206,19.6484,117.859,7.00016L117.406,2.7494ZM45.9814,21L82,21C82,24.5,70,27,62.7148,34.7L45.9814,34.7Q40.0769,34.7,35.9018,38.867Q31.7267,43.0339,31.7267,48.9269L31.7266,126.073Q31.7268,131.966,35.9019,136.133Q40.077,140.3,45.9814,140.3L115.844,140.3L117.749,158L45.9814,158Q34.3911,158,26.1956,149.82Q18,141.641,18,130.073L18,48.9269Q18,37.3592,26.1956,29.1796Q34.3911,21,45.9814,21ZM160.019,34.7L159.648,34.7C151.5,25.5,149,29.1797,143.823,21L160.019,21Q171.609,21,179.804,29.1796Q188,37.3592,188,48.9269L188,111.997L174.273,103.415L174.273,48.9269Q174.273,43.034,170.098,38.867Q165.923,34.7,160.019,34.7ZM160.199,49.2097C160.136,48.5863,159.698,48.0911,159.142,48.0115C158.472,47.9148,157.859,48.4389,157.77,49.1832L157.519,51.3233C156.875,56.7709,153.27,61.2089,148.462,62.4745L147.225,62.8017C146.503,62.9912,145.994,63.7113,146,64.5367C146.006,65.3621,146.524,66.0734,147.249,66.2505L148.462,66.5468C153.257,67.7271,156.873,72.1227,157.504,77.539L157.774,79.8424C157.866,80.5138,158.388,81.0076,158.999,80.9999C159.609,80.9919,160.122,80.485,160.199,79.8116L160.398,77.7775C160.944,72.2453,164.611,67.7218,169.503,66.5468L170.744,66.2505C171.473,66.0761,171.995,65.3619,172,64.5328C172.005,63.7036,171.491,62.982,170.764,62.7973L169.503,62.4745C164.597,61.2135,160.942,56.6453,160.386,51.0801L160.199,49.2097ZM13,75.5C13,79.0899,10.0899,82,6.5,82C2.91015,82,0,79.0899,0,75.5C0,71.9101,2.91015,69,6.5,69C10.0899,69,13,71.9101,13,75.5ZM198.58,134.189L126.883,89.2755L126.874,89.281C125.685,88.5404,124.175,88.5536,122.999,89.3149C121.823,90.0761,121.193,91.4483,121.382,92.8363L133.013,176.636C133.219,178.12,134.32,179.323,135.78,179.66C137.24,179.997,138.756,179.399,139.592,178.155L159.993,147.765C160.27,147.352,160.704,147.071,161.195,146.988L197.273,140.813C198.749,140.559,199.916,139.421,200.206,137.951C200.496,136.481,199.849,134.985,198.58,134.189ZM13,98.5C13,102.09,10.0899,105,6.5,105C2.91015,105,0,102.09,0,98.5C0,94.9101,2.91015,92,6.5,92C10.0899,92,13,94.9101,13,98.5ZM13,121.5C13,125.09,10.0899,128,6.5,128C2.91015,128,0,125.09,0,121.5C0,117.91,2.91015,115,6.5,115C10.0899,115,13,117.91,13,121.5ZM14,144.5C14,148.09,11.0899,151,7.5,151C3.91015,151,1,148.09,1,144.5C1,140.91,3.91015,138,7.5,138C11.0899,138,14,140.91,14,144.5ZM26,165.5C26,169.09,23.0899,172,19.5,172C15.9101,172,13,169.09,13,165.5C13,161.91,15.9101,159,19.5,159C23.0899,159,26,161.91,26,165.5ZM48,172.5C48,176.09,45.0899,179,41.5,179C37.9101,179,35,176.09,35,172.5C35,168.91,37.9101,166,41.5,166C45.0899,166,48,168.91,48,172.5ZM71,173.5C71,177.09,68.0899,180,64.5,180C60.9101,180,58,177.09,58,173.5C58,169.91,60.9101,167,64.5,167C68.0899,167,71,169.91,71,173.5ZM94,173.5C94,177.09,91.0899,180,87.5,180C83.9101,180,81,177.09,81,173.5C81,169.91,83.9101,167,87.5,167C91.0899,167,94,169.91,94,173.5ZM117,173.5C117,177.09,114.09,180,110.5,180C106.91,180,104,177.09,104,173.5C104,169.91,106.91,167,110.5,167C114.09,167,117,169.91,117,173.5Z" fill-rule="evenodd" fill="%23000000" fill-opacity="1"/></g></svg>');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: 100%;
+}
+
+/* 菜单项：重新计算 */
+.p-recalculate-icon {
+    background-color: currentColor;
+    mask-image: url("data:image/svg+xml,%3csvg viewBox='0 0 1024 1024' xmlns='http://www.w3.org/2000/svg'%3e%3cpath d='M782.052 464c-23.144-167.169-166.689-295.889-340.314-295.889-189.75 0-343.574 153.74-343.574 343.389 0 189.648 153.823 343.389 343.574 343.389 92.101 0 175.739-36.22 237.43-95.187l71.695 67.182C671.193 904.899 562.086 953 441.738 953 197.773 953 0 755.334 0 511.5S197.773 70 441.738 70c227.909 0 415.505 172.504 439.211 394H1024L831 686 638 464h144.052z'/%3e%3c/svg%3e");
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+}
+
+/* 菜单项：解除关联 */
+.p-unlink-icon {
+    background-color: currentColor;
+    mask-image: url('data:image/svg+xml,<svg t="1750933208605" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M87.734857 29.842286l906.788572 906.788571a41.179429 41.179429 0 0 1-58.221715 58.221714L29.44 88.137143A41.179429 41.179429 0 1 1 87.771429 29.842286z m57.417143 629.540571h-73.142857V244.772571l73.142857 72.96v341.650286zM145.188571 586.349714h73.142858v73.033143h-73.142858v-73.033143zM364.617143 951.588571h-73.142857V464.054857l73.142857 73.216V951.588571zM778.752 951.588571H364.653714v-73.033142h341.065143l73.033143 73.033142zM730.441143 147.2H316.379429L243.053714 74.24h487.387429v72.886857z m0 414.354286l-73.142857-73.325715V147.2h73.142857v414.354286z m73.142857-194.925715h146.322286v73.618286h-146.285715v-73.618286z m146.322286 414.244572l-73.142857-73.142857v-267.483429h73.142857v340.626286z" fill="%23000" p-id="32748"></path></svg>');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+}
+
+/* 选择工具箱中的解除关联图标 */
+.p-button-icon.group-assistant-unlink-icon {
+    color: var(--p-amber-500);
+    background-color: currentColor;
+    mask-image: url('data:image/svg+xml,<svg t="1750933208605" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg"><path d="M87.734857 29.842286l906.788572 906.788571a41.179429 41.179429 0 0 1-58.221715 58.221714L29.44 88.137143A41.179429 41.179429 0 1 1 87.771429 29.842286z m57.417143 629.540571h-73.142857V244.772571l73.142857 72.96v341.650286zM145.188571 586.349714h73.142858v73.033143h-73.142858v-73.033143zM364.617143 951.588571h-73.142857V464.054857l73.142857 73.216V951.588571zM778.752 951.588571H364.653714v-73.033142h341.065143l73.033143 73.033142zM730.441143 147.2H316.379429L243.053714 74.24h487.387429v72.886857z m0 414.354286l-73.142857-73.325715V147.2h73.142857v414.354286z m73.142857-194.925715h146.322286v73.618286h-146.285715v-73.618286z m146.322286 414.244572l-73.142857-73.142857v-267.483429h73.142857v340.626286z" fill="%23000" p-id="32748"></path></svg>');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+    width: 1.2rem;
+    height: 1.2rem;
+}
+
+
+/* 菜单项：灵敏度 */
+.p-sensitivity-icon {
+    background-color: currentColor;
+    mask-image: url('data:image/svg+xml,<svg t="1750992235530" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="17599" width="16" height="16"><path d="M1024 273.067v-102.4C1024 76.8 947.2 0 853.333 0h-102.4v85.333h85.334c56.32 0 102.4 47.36 102.4 105.387v82.347H1024zM938.667 833.28c0 58.027-46.08 105.387-102.4 105.387h-85.334V1024h102.4C947.2 1024 1024 947.2 1024 853.333v-102.4h-85.333v82.347zM85.333 190.72c0-58.027 46.08-105.387 102.4-105.387h85.334V0h-102.4C76.8 0 0 76.8 0 170.667v102.4h85.333V190.72zM0 853.333C0 947.2 76.8 1024 170.667 1024h102.4v-85.333h-85.334c-56.32 0-102.4-47.36-102.4-105.387v-82.347H0v102.4z" fill="%23707070" p-id="17600"></path><path d="M508.052 272.503c13.225 0 23.177 9.818 26.45 22.862l9.953 160.03c3.34 9.818 6.612 13.044 9.952 13.044s9.953-9.817 9.953-9.817l23.177-133.942c0-9.818 13.226-19.635 23.178-19.635h3.34c13.225 3.295 23.177 16.34 19.838 29.384l-23.178 130.646s0 19.635 6.613 19.635c3.273 0 6.612-3.295 9.952-9.817l39.743-84.924c3.34-6.522 13.225-13.044 19.838-13.044 3.34 0 9.952 0 13.225 3.295 13.225 6.522 16.565 22.862 6.613 32.679l-66.194 153.508s-9.952 65.358-36.403 117.603v45.723H458.49V684.01s-26.45-16.34-52.968-58.767l-82.825-68.516c-9.953-9.817-13.225-26.157-3.34-35.905 6.613-6.522 13.225-9.818 19.838-9.818 6.613 0 9.953 3.296 16.565 6.522l46.356 35.906c6.612 3.295 9.952 6.522 16.565 6.522 13.225 0 26.45-19.566 6.612-81.697L385.551 347.61c-6.613-13.044 0-26.157 13.225-29.384h6.613c9.952 0 19.838 6.522 23.177 16.34l39.743 127.42v3.295c3.34 9.818 9.952 19.635 16.565 19.635 3.34 0 6.613-6.522 6.613-29.383l-9.953-156.804c0-13.181 9.953-26.226 26.518-26.226-3.34 0-3.34 0 0 0z m0-32.678h-3.34c-33.063 3.295-59.58 29.383-56.241 62.062-9.952-9.817-26.45-19.566-43.016-19.566-6.612 0-9.952 0-16.565 3.295-13.225 3.296-26.45 13.044-33.063 29.384-9.952 13.044-9.952 29.383-6.613 42.496l39.676 130.578c3.34 9.818 3.34 16.34 6.613 22.862L372.325 491.3c-9.952-9.818-23.177-13.044-36.403-13.044-16.565 0-33.063 6.522-43.015 19.635-13.226 13.044-16.566 26.156-16.566 42.427 0 16.34 9.953 29.384 19.838 39.201l79.42 65.358c16.564 26.157 33.062 42.496 46.355 55.54v29.384c0 16.34 16.565 32.679 33.063 32.679h145.612c16.565 0 33.063-13.045 33.063-32.68v-35.905c23.178-45.723 33.064-97.968 36.403-114.307l69.467-143.76c16.565-26.157 6.612-62.062-19.838-78.402-9.953-6.522-19.838-9.817-29.79-9.817-6.613 0-16.566 3.295-23.178 3.295l3.34-13.044c6.612-32.679-16.566-62.062-46.356-65.358h-9.952c-19.838 0-36.404 9.818-46.356 22.862v-3.295c-6.479-29.384-29.657-52.245-59.38-52.245" fill="%23707070" p-id="17601"></path></svg>');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+}
+
+/* 菜单项：自动开启 */
+.p-auto-power-icon {
+    background-color: currentColor;
+    mask-image: url('data:image/svg+xml,<svg t="1750991859926" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="8722" width="16" height="16"><path d="M894.49599969 510.49599969c0 105.6-35.20000031 195.19999969-111.99999938 272.00000062-73.60000031 73.60000031-163.2 112.00000031-268.8 111.99999938-108.79999969 0-198.40000031-38.4-272.00000062-111.99999938-76.8-76.8-112.00000031-166.39999969-111.99999938-272.00000062s35.20000031-195.19999969 111.99999938-268.8c73.60000031-76.8 163.2-115.2 272.00000062-111.99999938h25.59999938c6.40000031 0 16.00000031-3.19999969 22.40000062-9.6s9.6-16.00000031 9.6-22.40000062c0-9.6-3.19999969-16.00000031-9.6-22.39999969s-16.00000031-9.6-22.40000062-9.6h-25.59999938c-124.8-3.19999969-230.4 41.59999969-320.00000062 131.20000031-86.4 86.4-131.20000031 192-127.99999969 313.59999938-3.19999969 124.8 41.59999969 227.20000031 127.99999969 316.8 89.59999969 86.4 195.19999969 131.20000031 320.00000062 131.20000031 121.60000031 0 227.20000031-44.80000031 313.59999938-131.20000031 89.59999969-89.59999969 131.20000031-192 131.20000031-316.8 0-112.00000031-35.20000031-211.2-108.79999969-291.19999969-6.40000031-9.6-16.00000031-12.79999969-22.40000062-12.79999969-9.6 0-16.00000031 3.19999969-22.39999969 9.6-9.6 6.40000031-12.79999969 12.79999969-12.79999969 22.39999969 0 6.40000031 3.19999969 16.00000031 9.6 22.39999969 60.79999969 70.39999969 92.80000031 156.79999969 92.79999938 249.6z" p-id="8723"></path><path d="M443.29599969 305.696c-9.6-6.40000031-16.00000031-9.6-22.39999969-6.40000031-9.6 0-16.00000031 3.19999969-22.39999969 9.6-3.19999969 6.40000031-6.40000031 12.79999969-6.40000031 22.40000062v361.59999938c0 9.6 3.19999969 16.00000031 9.6 22.40000062 3.19999969 6.40000031 12.79999969 9.6 19.2 9.6 9.6 0 16.00000031 0 22.39999969-6.40000031l246.40000031-188.80000031c3.19999969-6.40000031 6.40000031-9.6 9.6-15.99999938v-19.2c-3.19999969-9.6-6.40000031-12.79999969-12.79999969-16.00000031l-243.20000062-172.8z m172.8 198.40000031l-159.99999938 124.8v-236.80000031l159.99999938 112.00000031z" p-id="8724"></path></svg>');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+}
+
+/* 菜单项：自动开启 */
+.p-auto-enable-icon:before {
+    /* This rule is no longer needed */
+}
+
+/* 自动边界更新图标 */
+.p-auto-boundary-icon {
+    width: 1rem;
+    height: 1rem;
+    display: inline-block;
+    background-image: url('data:image/svg+xml,<svg t="1751041478633" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="7817" width="200" height="200"><path d="M773.12 849.92h-512M773.12 875.52h-46.08v-51.2h46.08v51.2z m-97.28 0h-46.08v-51.2h46.08v51.2z m-97.28 0h-46.08v-51.2h46.08v51.2z m-97.28 0h-46.08v-51.2h46.08v51.2z m-92.16 0h-51.2v-51.2h46.08v51.2z m-97.28 0h-30.72v-51.2h25.6v51.2zM189.44 762.88V266.24M215.04 762.88h-51.2V716.8h51.2v46.08z m0-92.16h-51.2v-46.08h51.2v46.08z m0-97.28h-51.2v-46.08h51.2v46.08z m0-97.28h-51.2v-46.08h51.2v46.08z m0-97.28h-51.2v-46.08h51.2v46.08z m0-97.28h-51.2v-15.36h51.2v15.36zM189.44 778.24v-15.36" fill="%23ffffff" p-id="7818"></path><path d="M163.84 762.88h51.2v10.24h-51.2z" fill="%23ffffff" p-id="7819"></path><path d="M281.6 174.08H768M768 199.68l-5.12-51.2h5.12v51.2z m-51.2 0h-46.08v-51.2h46.08v51.2z m-97.28 0h-46.08v-51.2h46.08v51.2z m-97.28 0h-46.08v-51.2h46.08v51.2z m-92.16 0h-51.2v-51.2h46.08v51.2z m-97.28 0h-51.2v-51.2h46.08v51.2z" fill="%23ffffff" p-id="7820"></path><path d="M261.12 174.08h20.48M261.12 148.48h20.48v51.2h-20.48z" fill="%23ffffff" p-id="7821"></path><path d="M865.28 245.76v517.12M890.88 762.88h-51.2v-35.84h51.2v35.84z m0-81.92h-51.2v-46.08h51.2v46.08z m0-97.28h-51.2v-46.08h51.2v46.08z m0-97.28h-51.2v-46.08h51.2v46.08z m0-92.16h-51.2v-51.2h51.2v51.2z m0-97.28h-51.2v-51.2h51.2v51.2z" fill="%23ffffff" p-id="7822"></path><path d="M266.24 291.84H133.12c-20.48 0-40.96-20.48-40.96-40.96V117.76c0-20.48 20.48-40.96 40.96-40.96h133.12c20.48 0 40.96 20.48 40.96 40.96v133.12c0 20.48-20.48 40.96-40.96 40.96z m-122.88-51.2H256V128H143.36v112.64z" fill="%23ffffff" p-id="7823"></path><path d="M911.36 291.84h-133.12c-20.48 0-40.96-20.48-40.96-40.96V117.76c0-20.48 20.48-40.96 40.96-40.96h133.12c20.48 0 40.96 20.48 40.96 40.96v133.12c0 20.48-15.36 40.96-40.96 40.96z m-122.88-51.2h112.64V128h-112.64v112.64z" fill="%23ffffff" p-id="7824"></path><path d="M266.24 957.44H133.12c-20.48 0-40.96-20.48-40.96-40.96v-133.12c0-20.48 20.48-40.96 40.96-40.96h133.12c20.48 0 40.96 20.48 40.96 40.96v133.12c0 25.6-20.48 40.96-40.96 40.96z m-122.88-51.2H256v-112.64H143.36v112.64z" fill="%23ffffff" p-id="7825"></path><path d="M911.36 957.44h-133.12c-20.48 0-40.96-20.48-40.96-40.96v-133.12c0-20.48 20.48-40.96 40.96-40.96h133.12c20.48 0 40.96 20.48 40.96 40.96v133.12c0 25.6-15.36 40.96-40.96 40.96z m-122.88-51.2h112.64v-112.64h-112.64v112.64z" fill="%23ffffff" p-id="7826"></path></svg>');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+}
