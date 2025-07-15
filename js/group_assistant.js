@@ -31,6 +31,16 @@ import { i18n } from "./utils/i18n.js";
 
 // 添加监听组标题编辑完成的事件
 function setupTitleEditListener() {
+    // 为重建关系函数添加防抖
+    let rebuildDebounceTimer = null;
+    const debouncedRebuild = () => {
+        clearTimeout(rebuildDebounceTimer);
+        rebuildDebounceTimer = setTimeout(() => {
+            logger.debug(i18n.t("log_title_edit_debounced"));
+            rebuildAllGroupRelationships();
+        }, 150); // 150ms的延迟可以有效合并短时间内的多次触发
+    };
+
     // 监听 titleEditorTarget 变为 null 的情况，这表示标题编辑已完成
     const titleEditObserver = new MutationObserver((mutations) => {
         for (const mutation of mutations) {
@@ -40,12 +50,9 @@ function setupTitleEditListener() {
                     if (node.classList &&
                         (node.classList.contains('group-title-editor') ||
                             node.classList.contains('node-title-editor'))) {
-                        logger.debug(i18n.t("log_title_edit"));
-                        // 延迟一小段时间，确保 DOM 更新完成
-                        setTimeout(() => {
-                            rebuildAllGroupRelationships();
-                        }, 50);
-                        break;
+                        // 触发防抖重建，而不是直接调用
+                        debouncedRebuild();
+                        return; // 找到一个匹配项就足够了
                     }
                 }
             }
@@ -599,27 +606,36 @@ function setupCanvasDrawListeners(canvas) {
  */
 function setupDropListeners(canvasElement) {
     const onPointerUp = function () {
-        if (!state.hijackEnabled || !state.hoveredGroup || !state.draggingElement) return;
-
-        if (state.draggingElement === state.hoveredGroup) return;
-
-        const { draggingElement, hoveredGroup } = state;
-
-        if (draggingElement instanceof window.LGraphGroup) {
-            let parentGroup = hoveredGroup;
-            while (parentGroup) {
-                if (parentGroup === draggingElement) {
-                    logger.debug("无法添加：会导致循环引用");
-                    return;
-                }
-                parentGroup = parentGroup.group;
-            }
+        // 拖放结束，检查是否是有效的放置目标
+        if (!state.hijackEnabled || !state.hoveredGroup) {
+            return;
         }
 
-        addSelectedItemsToGroup(hoveredGroup,
-            draggingElement instanceof window.LGraphNode ? [draggingElement] : [],
-            draggingElement instanceof window.LGraphGroup ? [draggingElement] : []);
+        const targetGroup = state.hoveredGroup;
 
+        // 使用 `getCurrentSelection` 获取所有选中的对象，这是处理多选的正确方式
+        const { selectedNodes, selectedGroups } = getCurrentSelection(true);
+
+        // 如果有多个选中项，优先处理多选
+        if (selectedNodes.length > 0 || selectedGroups.length > 0) {
+            logger.debug(`将 ${selectedNodes.length} 个节点和 ${selectedGroups.length} 个组通过拖放添加到组 '${targetGroup.title}'`);
+            addSelectedItemsToGroup(targetGroup, selectedNodes, selectedGroups);
+        }
+        // 如果没有多选，则可能是单项拖动，使用 draggingElement 作为备选
+        else if (state.draggingElement) {
+            const { draggingElement } = state;
+
+            // 不能将一个元素放入其自身
+            if (draggingElement === targetGroup) return;
+
+            logger.debug(`将单个拖动元素 '${draggingElement.title}' 添加到组 '${targetGroup.title}'`);
+
+            const nodesToAdd = draggingElement instanceof window.LGraphNode ? [draggingElement] : [];
+            const groupsToAdd = draggingElement instanceof window.LGraphGroup ? [draggingElement] : [];
+            addSelectedItemsToGroup(targetGroup, nodesToAdd, groupsToAdd);
+        }
+
+        // 操作完成后，清理状态
         updateState({ hoveredGroup: null, draggingElement: null });
     };
     canvasElement.addEventListener("pointerup", onPointerUp, true);

@@ -225,17 +225,38 @@ function rebuildGroupToGroupRelations() {
         // 计算每个组的面积
         const groupAreas = new Map();
         for (const group of app.graph._groups) {
+            if (!group || group._isDeleted || !group.size) continue;
             const area = group.size[0] * group.size[1];
             groupAreas.set(group, area);
         }
 
         // 按面积从大到小排序组
-        const sortedGroups = [...app.graph._groups].sort((a, b) => {
-            return groupAreas.get(b) - groupAreas.get(a);
+        const sortedGroups = [...app.graph._groups].filter(g => g && !g._isDeleted).sort((a, b) => {
+            return (groupAreas.get(b) || 0) - (groupAreas.get(a) || 0);
         });
 
+        // 分批处理组与组之间的关系
+        processGroupToGroupRelationsBatch(0, sortedGroups, groupAreas);
+    } catch (error) {
+        logger.error("重建组关系时出错:", error);
+    }
+}
+
+/**
+ * 分批处理组到组的关系
+ * @param {number} startIndex - 起始组索引
+ * @param {Array} sortedGroups - 排序后的组
+ * @param {Map} groupAreas - 组面积映射
+ */
+function processGroupToGroupRelationsBatch(startIndex, sortedGroups, groupAreas) {
+    try {
+        const batchSize = 25; // 每批处理25个组，这是一个平衡值
+        const endIndex = Math.min(startIndex + batchSize, sortedGroups.length);
+
         // 确定组与组之间的嵌套关系
-        for (const innerGroup of sortedGroups) {
+        for (let i = startIndex; i < endIndex; i++) {
+            const innerGroup = sortedGroups[i];
+
             // 找出所有包含这个组的外层组
             const containingGroups = [];
             for (const outerGroup of sortedGroups) {
@@ -263,16 +284,26 @@ function rebuildGroupToGroupRelations() {
                 containingGroups.sort((a, b) => groupAreas.get(a) - groupAreas.get(b));
                 const parentGroup = containingGroups[0];
                 innerGroup.group = parentGroup;
-                parentGroup._children.add(innerGroup);
+                if (parentGroup._children) {
+                    parentGroup._children.add(innerGroup);
+                }
             }
         }
 
-        // 继续处理节点与组的关系
-        setTimeout(() => processNodeToGroupRelationsBatch(0, sortedGroups, groupAreas), 0);
+        // 如果还有组需要处理
+        if (endIndex < sortedGroups.length) {
+            setTimeout(() => processGroupToGroupRelationsBatch(endIndex, sortedGroups, groupAreas), 0);
+        } else {
+            // 完成组关系处理后，继续处理节点与组的关系
+            setTimeout(() => processNodeToGroupRelationsBatch(0, sortedGroups, groupAreas), 0);
+        }
     } catch (error) {
-        logger.error("重建组关系时出错:", error);
+        logger.error("处理组间关系时出错:", error);
+        // 即使出错，也尝试继续下一步
+        setTimeout(() => processNodeToGroupRelationsBatch(0, sortedGroups, groupAreas), 0);
     }
 }
+
 
 /**
  * 分批处理节点到组的关系
