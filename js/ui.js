@@ -77,20 +77,34 @@ export function drawGroupHighlight(group, ctx, color) {
         const scaledHeight = height * scale;
 
         ctx.save();
-        ctx.globalAlpha = 0.55 * app.canvas.editor_alpha;
+
+        // --- 填充高亮 ---
+        // 使用 'lighter' 模式实现颜色叠加提亮，使高亮效果与组原有颜色混合而不是覆盖
+        ctx.globalCompositeOperation = 'lighter';
+        // 为 'lighter' 模式设置一个较低的透明度，以获得更柔和、不刺眼的视觉效果
+        ctx.globalAlpha = 0.2 * app.canvas.editor_alpha;
         ctx.fillStyle = color;
-        ctx.strokeStyle = color;
 
-        ctx.beginPath();
-        ctx.rect(screenX + 0.5, screenY + 0.5, scaledWidth, font_size * 1.4 * scale);
-        ctx.fill();
-
+        // 绘制整个组区域的高亮
         ctx.beginPath();
         ctx.rect(screenX + 0.5, screenY + 0.5, scaledWidth, scaledHeight);
         ctx.fill();
 
-        ctx.globalAlpha = app.canvas.editor_alpha;
-        ctx.lineWidth = 2;
+        // 再次绘制标题区域，使其更亮，从而突出显示
+        ctx.beginPath();
+        ctx.rect(screenX + 0.5, screenY + 0.5, scaledWidth, font_size * 1.4 * scale);
+        ctx.fill();
+
+        // --- 绘制边框 ---
+        // 恢复默认混合模式，以绘制一个清晰、不透明的边框
+        ctx.globalCompositeOperation = 'source-over';
+        ctx.globalAlpha = 0.8 * app.canvas.editor_alpha; // 让边框更明显
+        ctx.strokeStyle = color;
+        ctx.lineWidth = 2; // 保持边框清晰
+
+        // 为边框定义路径并绘制
+        ctx.beginPath();
+        ctx.rect(screenX + 0.5, screenY + 0.5, scaledWidth, scaledHeight);
         ctx.stroke();
 
         ctx.restore();
