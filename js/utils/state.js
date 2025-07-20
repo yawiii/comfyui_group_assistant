@@ -38,6 +38,8 @@ export const state = {
     // 选中状态
     currentSelectedNodes: [],         // 当前选中的节点
     currentSelectedGroups: [],        // 当前选中的组
+    // ctrlKeyPressed: false, // 跟踪Ctrl键状态
+    shiftKeyPressed: false, // 跟踪Shift键状态
 };
 
 // --- 状态更新函数 ---

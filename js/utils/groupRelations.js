@@ -585,25 +585,39 @@ export function addSelectedItemsToGroup(group, selectedNodes = [], selectedGroup
             group._children.add(childGroup);
         }
 
-        // 更新所有受影响的组的边界
+        // 将目标组也添加到更新列表中
         groupsToUpdate.add(group);
-        for (const groupToUpdate of groupsToUpdate) {
-            if (groupToUpdate && !groupToUpdate._isDeleted) {
-                updateGroupBoundary(groupToUpdate, true);
-            }
-        }
 
-        // 更新渲染顺序并刷新画布
-        sortGroupsForRenderOrder();
-        if (app.canvas) {
-            app.canvas.setDirty(true, true);
+        // 延迟更新组边界，避免多次重复计算
+        setTimeout(() => {
+            try {
+                // 先更新所有受影响的原组
+                for (const groupToUpdate of groupsToUpdate) {
+                    if (groupToUpdate && !groupToUpdate._isDeleted && groupToUpdate !== group) {
+                        updateGroupBoundary(groupToUpdate, false, null, true);
+                    }
+                }
 
-            // 手动触发选择变更事件，以刷新选择工具栏
-            if (app.canvas.onSelectionChange) {
-                const selection = app.canvas.getSelection ? app.canvas.getSelection() : (app.canvas.selected_nodes || {});
-                app.canvas.onSelectionChange(selection);
+                // 最后更新目标组，并允许更新其父组
+                if (!group._isDeleted) {
+                    updateGroupBoundary(group, true, null, true);
+                }
+
+                // 更新渲染顺序并刷新画布
+                sortGroupsForRenderOrder();
+                if (app.canvas) {
+                    app.canvas.setDirty(true, true);
+
+                    // 手动触发选择变更事件，以刷新选择工具栏
+                    if (app.canvas.onSelectionChange) {
+                        const selection = app.canvas.getSelection ? app.canvas.getSelection() : (app.canvas.selected_nodes || {});
+                        app.canvas.onSelectionChange(selection);
+                    }
+                }
+            } catch (error) {
+                logger.error("更新组边界时出错:", error);
             }
-        }
+        }, 0);
 
     } catch (error) {
         logger.error("添加选中项到组时出错:", error);

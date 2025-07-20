@@ -74,6 +74,49 @@ function setupTitleEditListener() {
 // ================ 事件监听器 ================
 
 /**
+ * 设置Shift键状态监听
+ */
+function setupShiftKeyListeners() {
+    // 处理按键按下
+    const onKeyDown = (e) => {
+        if (e.key === 'Shift') {
+            updateState({ shiftKeyPressed: true });
+        }
+        // if (e.key === 'Control' || e.key === 'Meta') {
+        //     updateState({ ctrlKeyPressed: true });
+        // }
+    };
+
+    // 处理按键释放
+    const onKeyUp = (e) => {
+        if (e.key === 'Shift') {
+            updateState({ shiftKeyPressed: false });
+        }
+        // if (e.key === 'Control' || e.key === 'Meta') {
+        //     updateState({ ctrlKeyPressed: false });
+        // }
+    };
+
+    // 处理窗口失去焦点时重置状态
+    const onBlur = () => {
+        updateState({ shiftKeyPressed: false });
+        // updateState({ ctrlKeyPressed: false });
+    };
+
+    // 添加事件监听
+    window.addEventListener('keydown', onKeyDown);
+    window.addEventListener('keyup', onKeyUp);
+    window.addEventListener('blur', onBlur);
+
+    // 返回清理函数
+    return () => {
+        window.removeEventListener('keydown', onKeyDown);
+        window.removeEventListener('keyup', onKeyUp);
+        window.removeEventListener('blur', onBlur);
+    };
+}
+
+/**
  * 设置节点和组的选中事件监听
  * @param {LGraphCanvas} canvas 
  */
@@ -486,6 +529,17 @@ function setupCanvasDrawListeners(canvas) {
             return;
         }
 
+        // 如果Shift键被按下，跳过悬停检测
+        if (state.shiftKeyPressed) {
+            updateState({ hoveredGroup: null });
+            return;
+        }
+        // 如果Ctrl键被按下，跳过悬停检测
+        // if (state.ctrlKeyPressed) {
+        //     updateState({ hoveredGroup: null });
+        //     return;
+        // }
+
         const overlappingGroups = [];
         // 首先收集所有组，包括嵌套组
         const allGroups = [];
@@ -510,8 +564,16 @@ function setupCanvasDrawListeners(canvas) {
         // 计算每个组的面积
         const groupAreas = new Map();
         for (const group of allGroups) {
-            const area = (group.size[0] || 0) * (group.size[1] || 0);
-            groupAreas.set(group, area);
+            try {
+                if (group && group.size && Array.isArray(group.size) && group.size.length >= 2) {
+                    const area = group.size[0] * group.size[1];
+                    if (!isNaN(area) && isFinite(area) && area > 0) {
+                        groupAreas.set(group, area);
+                    }
+                }
+            } catch (error) {
+                logger.error("计算组面积时出错:", error);
+            }
         }
 
         // 对所有组进行重叠检测
@@ -606,6 +668,15 @@ function setupCanvasDrawListeners(canvas) {
  */
 function setupDropListeners(canvasElement) {
     const onPointerUp = function () {
+        // 如果Shift键被按下，跳过拖放操作
+        if (state.shiftKeyPressed) {
+            return;
+        }
+        // 如果Ctrl键被按下，跳过拖放操作
+        // if (state.ctrlKeyPressed) {
+        //     return;
+        // }
+
         // 拖放结束，检查是否是有效的放置目标
         if (!state.hijackEnabled || !state.hoveredGroup) {
             return;
@@ -769,6 +840,9 @@ app.registerExtension({
 
             // 设置标题编辑完成监听
             const cleanupTitleEdit = setupTitleEditListener();
+
+            // 设置Shift键状态监听
+            const cleanupShiftKey = setupShiftKeyListeners();
 
             /* // 初始化的逻辑已统一移至ui.js的graph-ready事件中，避免重复执行
             // 根据开关的初始状态决定是否启用
@@ -940,6 +1014,7 @@ app.registerExtension({
                     cleanupUndoRedo();
                     cleanupGroupHijack();
                     cleanupTitleEdit();
+                    cleanupShiftKey();
                     app.canvas.canvas.removeEventListener("pointerup", pointerUpListener, true);
 
 
