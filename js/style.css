@@ -60,7 +60,6 @@
 
 .group-assistant-ui-container .p-splitbutton-menu {
     position: absolute;
-    top: 100%;
     left: 50%;
     z-index: 1000;
     width: 350px;
@@ -68,15 +67,28 @@
     border: 1px solid var(--p-menubar-submenu-border-color);
     border-radius: 8px;
     box-shadow: 0 2px 4px var(--p-menubar-submenu-shadow);
-    margin-top: 2px;
     overflow: hidden;
     padding: 6px;
     box-sizing: border-box;
     visibility: hidden;
     opacity: 0;
+    pointer-events: none;
+}
+
+/* 向下展开的菜单样式 */
+.group-assistant-ui-container .p-splitbutton-menu.menu-downward {
+    top: 100%;
+    margin-top: 2px;
     transform: translateX(-50%) translateY(-10px);
     transition: transform 0.15s ease-out, opacity 0.15s ease-out, visibility 0s 0.15s;
-    pointer-events: none;
+}
+
+/* 向上展开的菜单样式 */
+.group-assistant-ui-container .p-splitbutton-menu.menu-upward {
+    bottom: 100%;
+    margin-bottom: 2px;
+    transform: translateX(-50%) translateY(10px);
+    transition: transform 0.15s ease-out, opacity 0.15s ease-out, visibility 0s 0.15s;
 }
 
 /* 禁用加载时的初始动画 */

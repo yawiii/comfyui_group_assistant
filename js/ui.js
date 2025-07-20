@@ -162,7 +162,33 @@ function buildFullUI() {
     // --- 菜单显示/隐藏逻辑 ---
     const toggleMenu = () => menu.classList.contains('p-splitbutton-menu-active') ? hideMenu() : showMenu();
     const showMenu = () => {
-        menu.style.display = 'block'; // 显示菜单
+        // 计算菜单显示位置
+        const buttonRect = splitButton.getBoundingClientRect();
+        const menuRect = menu.getBoundingClientRect();
+        const viewportHeight = window.innerHeight;
+        
+        // 检查菜单栏是否在底部
+        const menuBar = app.menu?.element;
+        const isMenuBarAtBottom = menuBar && menuBar.getBoundingClientRect().top > viewportHeight / 2;
+
+        // 显示菜单
+        menu.style.display = 'block';
+        
+        // 根据空间决定显示方向
+        if (isMenuBarAtBottom) {
+            // 菜单栏在底部，菜单向上展开
+            menu.style.bottom = '100%';
+            menu.style.top = 'auto';
+            menu.classList.add('menu-upward');
+            menu.classList.remove('menu-downward');
+        } else {
+            // 菜单栏在顶部，菜单向下展开
+            menu.style.top = '100%';
+            menu.style.bottom = 'auto';
+            menu.classList.add('menu-downward');
+            menu.classList.remove('menu-upward');
+        }
+
         requestAnimationFrame(() => {
             menu.classList.add('p-splitbutton-menu-active');
         });
