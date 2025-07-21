@@ -7,15 +7,30 @@
 
 Group Assistant solves the problem that the native group function of ComfyUI mistakenly drags irrelevant nodes when dragging. It also realizes the automatic adjustment of group boundaries, making node arrangement neat and orderly. This makes the group function more useful.
 
-简介晚点再补充~😄
-
 
 ## ✨ 功能特性
+通过拖动放置的方式，将节点或组添加进组
+
+![gif-添加进组方式](https://github.com/user-attachments/assets/1997332b-b575-43db-8d82-d1acc6936c0f)
+
+通过选中工具箱，解除组关系
+
+![gif-移出组](https://github.com/user-attachments/assets/ccf75032-519d-4741-b2f7-258baba1596a)
+
+自动调整组边界、自动修正层级排序，整理节点更轻松
+
+![gif-轻松整理节点](https://github.com/user-attachments/assets/76a8f7ba-8696-4cc7-9d45-3aef71e9ee61)
+
+配合shift键，可以暂时屏蔽进组检测
+
+![gif-快捷键](https://github.com/user-attachments/assets/b01e021f-2873-47de-94bd-62d7a54b59e4)
+
+![gif-向工作流添加节点](https://github.com/user-attachments/assets/b1ed1417-c558-4fa1-ad8a-7c4a277061cf)
 
 
 
 
-如果这个插件对你有帮助，请考虑给个⭐Star支持一下！
+如果这个插件对你有帮助，请点个⭐Star支持一下！
 
 
 
