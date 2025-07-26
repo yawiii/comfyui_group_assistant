@@ -1,6 +1,6 @@
 [project]
 name = "group-assistant"
-version = "1.0.4"
+version = "1.0.5"
 description = "阿组小助手（Group Assistant）,solves the problem that the native group function of ComfyUI mistakenly drags irrelevant nodes when dragging. It also realizes the automatic adjustment of group boundaries, making node arrangement neat and orderly. This makes the group function more useful."
 readme = "README.md"
 license = {text = "GNU General Public License v3"}
