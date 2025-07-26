@@ -16,6 +16,7 @@ const translations = {
         "auto_enable": "Auto Enable Group Assistant",
         "auto_boundary": "Auto Adjust Group Boundary",
         "sensitivity": "Hover Detection Sensitivity",
+        "group_padding": "Group Padding",
 
         // 命令相关
         "cmd_unlink": "Remove Selected from Group",
@@ -51,6 +52,7 @@ const translations = {
         "auto_enable": "自动开启阿组小助手",
         "auto_boundary": "自动调整组边界",
         "sensitivity": "悬停检测灵敏度",
+        "group_padding": "组边距",
 
         // 命令相关
         "cmd_unlink": "将选中对象从组中移出",

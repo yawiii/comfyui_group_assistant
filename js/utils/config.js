@@ -11,7 +11,8 @@ export const GroupAssistantConfig = {
         logLevel: 0,             // 日志级别: 0=仅错误, 1=错误和调试
         overlapSensitivity: 0.7, // 默认70%灵敏度 (对应30%的重叠阈值)
         minOverlapArea: 100,     // 最小重叠面积（像素）
-        showPreview: true        // 是否显示重叠预览
+        showPreview: true,       // 是否显示重叠预览
+        groupPadding: 10         // 组边距（像素）
     },
 
     // 当前配置

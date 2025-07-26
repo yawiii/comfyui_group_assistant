@@ -141,6 +141,57 @@ export function rebuildAllGroupRelationships() {
         // 将剩余步骤移至下一个事件循环，让UI有机会更新
         setTimeout(() => {
             rebuildGroupToGroupRelations();
+
+            // 在重建关系后更新所有组的边界
+            setTimeout(() => {
+                // 确保所有组的边界都使用当前设置的边距值
+                if (app.graph && app.graph._groups) {
+                    // 首先更新没有子组的组（叶子节点）
+                    const leafGroups = app.graph._groups.filter(g =>
+                        g && !g._isDeleted && (!g._children || g._children.size === 0 ||
+                            Array.from(g._children).every(child => !(child instanceof window.LGraphGroup)))
+                    );
+
+                    for (const group of leafGroups) {
+                        updateGroupBoundary(group, false, null, true);
+                    }
+
+                    // 然后更新有子组的组（自下而上）
+                    const nonLeafGroups = app.graph._groups.filter(g =>
+                        g && !g._isDeleted && g._children &&
+                        Array.from(g._children).some(child => child instanceof window.LGraphGroup)
+                    );
+
+                    // 按照层级排序，先处理深层次的组
+                    nonLeafGroups.sort((a, b) => {
+                        let depthA = 0;
+                        let depthB = 0;
+                        let currentA = a;
+                        let currentB = b;
+
+                        while (currentA && currentA.group) {
+                            depthA++;
+                            currentA = currentA.group;
+                        }
+
+                        while (currentB && currentB.group) {
+                            depthB++;
+                            currentB = currentB.group;
+                        }
+
+                        return depthB - depthA; // 深层次的组先处理
+                    });
+
+                    for (const group of nonLeafGroups) {
+                        updateGroupBoundary(group, true, null, true);
+                    }
+
+                    // 强制重绘画布
+                    if (app.canvas) {
+                        app.canvas.setDirty(true, true);
+                    }
+                }
+            }, 100);
         }, 0);
     } catch (error) {
         logger.error("重新计算组关系时出错:", error);
@@ -359,6 +410,49 @@ function processNodeToGroupRelationsBatch(startIndex, sortedGroups, groupAreas) 
 function finalizeRebuild() {
     try {
         sortGroupsForRenderOrder();
+
+        // 确保所有组的边界都使用当前设置的边距值
+        if (app.graph && app.graph._groups) {
+            // 首先更新没有子组的组（叶子节点）
+            const leafGroups = app.graph._groups.filter(g =>
+                g && !g._isDeleted && (!g._children || g._children.size === 0 ||
+                    Array.from(g._children).every(child => !(child instanceof window.LGraphGroup)))
+            );
+
+            for (const group of leafGroups) {
+                updateGroupBoundary(group, false, null, true);
+            }
+
+            // 然后更新有子组的组（自下而上）
+            const nonLeafGroups = app.graph._groups.filter(g =>
+                g && !g._isDeleted && g._children &&
+                Array.from(g._children).some(child => child instanceof window.LGraphGroup)
+            );
+
+            // 按照层级排序，先处理深层次的组
+            nonLeafGroups.sort((a, b) => {
+                let depthA = 0;
+                let depthB = 0;
+                let currentA = a;
+                let currentB = b;
+
+                while (currentA && currentA.group) {
+                    depthA++;
+                    currentA = currentA.group;
+                }
+
+                while (currentB && currentB.group) {
+                    depthB++;
+                    currentB = currentB.group;
+                }
+
+                return depthB - depthA; // 深层次的组先处理
+            });
+
+            for (const group of nonLeafGroups) {
+                updateGroupBoundary(group, true, null, true);
+            }
+        }
 
         if (app.canvas) {
             app.canvas.setDirty(true, true);

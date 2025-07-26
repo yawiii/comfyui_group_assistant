@@ -26,6 +26,7 @@ export const state = {
     overlapSensitivity: GroupAssistantConfig.current.overlapSensitivity || 0.7, // 悬停检测灵敏度
     minOverlapArea: GroupAssistantConfig.current.minOverlapArea || 100,     // 最小重叠面积
     showPreview: GroupAssistantConfig.current.showPreview !== false,        // 是否显示重叠预览
+    groupPadding: GroupAssistantConfig.current.groupPadding || 10,          // 组边距（像素）
 
     // 原始方法备份
     originalRecomputeInsideNodes: null,
@@ -131,7 +132,7 @@ function handleSpecialStateChanges(keys) {
     }
 
     // 处理配置相关的状态变更
-    const configKeys = ['overlapSensitivity', 'minOverlapArea', 'showPreview'];
+    const configKeys = ['overlapSensitivity', 'minOverlapArea', 'showPreview', 'groupPadding'];
     const changedConfigKeys = keys.filter(key => configKeys.includes(key));
 
     if (changedConfigKeys.length > 0) {

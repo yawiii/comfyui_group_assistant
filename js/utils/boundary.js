@@ -132,8 +132,11 @@ export function updateGroupBoundary(group, updateParents = true, processedGroups
 
         if (allElements.length === 0) return;
 
-        // 直接使用自定义方法计算边界，避免重复计算
-        const success = directResizeGroup(group, allElements, 10);
+        // 获取当前配置的边距值
+        const padding = state.groupPadding || GroupAssistantConfig.current.groupPadding || 10;
+
+        // 直接使用自定义方法计算边界，使用配置的边距值
+        const success = directResizeGroup(group, allElements, padding);
 
         // 如果边界计算成功，更新组的 _bounding 属性
         if (success) {

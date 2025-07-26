@@ -166,14 +166,14 @@ function buildFullUI() {
         const buttonRect = splitButton.getBoundingClientRect();
         const menuRect = menu.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
-        
+
         // 检查菜单栏是否在底部
         const menuBar = app.menu?.element;
         const isMenuBarAtBottom = menuBar && menuBar.getBoundingClientRect().top > viewportHeight / 2;
 
         // 显示菜单
         menu.style.display = 'block';
-        
+
         // 根据空间决定显示方向
         if (isMenuBarAtBottom) {
             // 菜单栏在底部，菜单向上展开
@@ -372,6 +372,10 @@ function createMenuContent(menu, hideMenu) {
     // 6. 灵敏度滑块
     const sensitivityControl = createSensitivityControl();
     menu.appendChild(sensitivityControl);
+
+    // 7. 组边距滑块
+    const paddingControl = createPaddingControl();
+    menu.appendChild(paddingControl);
 }
 
 /**
@@ -567,4 +571,137 @@ function createSensitivityControl() {
 
     sensitivityMenuItem.append(icon, label, sliderContainer, valueContainer);
     return sensitivityMenuItem;
+}
+
+/**
+ * 创建组边距调节器
+ * @returns {HTMLElement}
+ */
+function createPaddingControl() {
+    const paddingMenuItem = document.createElement('div');
+    paddingMenuItem.className = 'p-splitbutton-menuitem padding-control';
+    paddingMenuItem.onclick = (e) => e.stopPropagation();
+
+    const icon = document.createElement('span');
+    icon.className = 'p-menuitem-icon p-padding-icon';
+
+    const label = document.createElement('span');
+    label.className = 'padding-label-text';
+    label.textContent = i18n.t("group_padding") || "组边距";
+
+    const sliderContainer = document.createElement('div');
+    sliderContainer.className = 'group-assistant-slider-container';
+    const slider = document.createElement('div');
+    slider.className = 'group-assistant-slider';
+    const range = document.createElement('span');
+    range.className = 'group-assistant-slider-range';
+    const handle = document.createElement('span');
+    handle.className = 'group-assistant-slider-handle';
+    slider.append(range, handle);
+
+    // 计算滑块位置的函数
+    // 边距值范围：10-50像素
+    const MIN_PADDING = 10;
+    const MAX_PADDING = 50;
+    const PADDING_RANGE = MAX_PADDING - MIN_PADDING;
+    
+    const updateSliderUI = (padding) => {
+        // 将边距值映射到0-100%的范围
+        const percent = Math.min(100, ((padding - MIN_PADDING) / PADDING_RANGE) * 100);
+        range.style.width = `${percent}%`;
+        handle.style.left = `${percent}%`;
+    };
+    
+    // 确保初始值在范围内
+    const initialPadding = Math.max(MIN_PADDING, Math.min(MAX_PADDING, state.groupPadding));
+    updateSliderUI(initialPadding);
+
+    sliderContainer.appendChild(slider);
+
+    const valueContainer = document.createElement('div');
+    valueContainer.className = 'padding-value-container';
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'padding-value-input';
+
+    // 更新输入框的函数
+    const updateInputUI = (padding) => {
+        input.value = Math.round(padding);
+    };
+    updateInputUI(initialPadding);
+
+    const pixelSign = document.createElement('span');
+    pixelSign.textContent = 'px';
+    valueContainer.appendChild(input);
+    valueContainer.appendChild(pixelSign);
+
+    // 添加状态监听
+    addStateListener('groupPadding', (padding) => {
+        // 确保值在有效范围内
+        const validPadding = Math.max(MIN_PADDING, Math.min(MAX_PADDING, padding));
+        updateSliderUI(validPadding);
+        updateInputUI(validPadding);
+
+        // 当边距值变化时，重新计算所有组关系
+        // 使用setTimeout避免频繁更新
+        if (window.paddingUpdateTimeout) {
+            clearTimeout(window.paddingUpdateTimeout);
+        }
+        window.paddingUpdateTimeout = setTimeout(() => {
+            // 重新计算所有组关系
+            rebuildAllGroupRelationships();
+        }, 300); // 300ms延迟，避免拖动滑块时频繁更新
+    });
+
+    // 点击滑块区域时更新边距值
+    slider.addEventListener('mousedown', (e) => {
+        if (e.button !== 0 || e.target === handle) return;
+        const rect = slider.getBoundingClientRect();
+        if (rect.width > 0) {
+            const percent = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+            // 将0-1的百分比映射到10-50的边距值
+            const padding = Math.round(MIN_PADDING + percent * PADDING_RANGE);
+            updateState({ groupPadding: padding });
+        }
+    });
+
+    // 拖动滑块手柄时更新边距值
+    handle.addEventListener('mousedown', (e) => {
+        if (e.button !== 0) return;
+        e.stopPropagation();
+        e.preventDefault(); // 防止文本选择
+
+        const sliderRect = slider.getBoundingClientRect();
+        if (sliderRect.width === 0) return;
+
+        const onDrag = (moveEvent) => {
+            moveEvent.preventDefault(); // 防止在拖动过程中选择文本
+            const percent = Math.max(0, Math.min(1, (moveEvent.clientX - sliderRect.left) / sliderRect.width));
+            // 将0-1的百分比映射到10-50的边距值
+            const padding = Math.round(MIN_PADDING + percent * PADDING_RANGE);
+            updateState({ groupPadding: padding });
+        };
+
+        const onDragEnd = () => {
+            document.removeEventListener('mousemove', onDrag);
+            document.removeEventListener('mouseup', onDragEnd);
+        };
+
+        document.addEventListener('mousemove', onDrag);
+        document.addEventListener('mouseup', onDragEnd);
+    });
+
+    // 手动输入边距值
+    input.addEventListener('change', () => {
+        const value = Math.max(MIN_PADDING, Math.min(MAX_PADDING, parseInt(input.value, 10) || MIN_PADDING));
+        input.value = value;
+        updateState({ groupPadding: value });
+    });
+
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') input.blur();
+    });
+
+    paddingMenuItem.append(icon, label, sliderContainer, valueContainer);
+    return paddingMenuItem;
 } 

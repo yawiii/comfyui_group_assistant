@@ -441,3 +441,109 @@
     background-repeat: no-repeat;
     background-position: center;
 }
+
+/* 组边距图标 */
+.p-padding-icon {
+    background-color: currentColor;
+    mask-image: url('data:image/svg+xml,<svg t="1753450449169" class="icon" viewBox="0 0 1024 1024" version="1.1" xmlns="http://www.w3.org/2000/svg" p-id="1487" width="256" height="256"><path d="M712.362667 141.380267m0 34.133333l0 0q0 34.133333-34.133334 34.133333l-341.333333 0q-34.133333 0-34.133333-34.133333l0 0q0-34.133333 34.133333-34.133333l341.333333 0q34.133333 0 34.133334 34.133333Z" fill="%23707070" p-id="1488"></path><path d="M848.896 687.5136m-34.133333 0l0 0q-34.133333 0-34.133334-34.133333l0-341.333334q0-34.133333 34.133334-34.133333l0 0q34.133333 0 34.133333 34.133333l0 341.333334q0 34.133333-34.133333 34.133333Z" fill="%23707070" p-id="1489"></path><path d="M234.496 687.5136m-34.133333 0l0 0q-34.133333 0-34.133334-34.133333l0-341.333334q0-34.133333 34.133334-34.133333l0 0q34.133333 0 34.133333 34.133333l0 341.333334q0 34.133333-34.133333 34.133333Z" fill="%23707070" p-id="1490"></path><path d="M712.362667 755.780267m0 34.133333l0 0q0 34.133333-34.133334 34.133333l-341.333333 0q-34.133333 0-34.133333-34.133333l0 0q0-34.133333 34.133333-34.133333l341.333333 0q34.133333 0 34.133334 34.133333Z" fill="%23707070" p-id="1491"></path></svg>');
+    mask-repeat: no-repeat;
+    mask-position: center;
+    mask-size: contain;
+}
+
+/* 组边距控制样式 */
+.group-assistant-ui-container .padding-control {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 0 16px !important;
+    cursor: default !important;
+}
+
+.group-assistant-ui-container .padding-control:hover {
+    background-color: transparent !important;
+}
+
+.group-assistant-ui-container .padding-control .padding-label-text {
+    color: var(--input-text);
+    flex-shrink: 0;
+    cursor: default;
+}
+
+/* 添加滑块容器样式 */
+.group-assistant-ui-container .padding-control .group-assistant-slider-container {
+    flex-grow: 1;
+    margin: 0 8px;
+}
+
+/* 添加滑块样式 */
+.group-assistant-ui-container .padding-control .group-assistant-slider {
+    position: relative;
+    height: 4px;
+    background: var(--comfy-input-bg);
+    border-radius: 2px;
+    cursor: pointer;
+}
+
+/* 添加滑块范围样式 */
+.group-assistant-ui-container .padding-control .group-assistant-slider-range {
+    position: absolute;
+    height: 100%;
+    background: var(--p-button-primary-background);
+    border-radius: 2px;
+    pointer-events: none;
+}
+
+/* 添加滑块手柄样式 */
+.group-assistant-ui-container .padding-control .group-assistant-slider-handle {
+    position: absolute;
+    top: 50%;
+    width: 16px;
+    height: 16px;
+    background-color: white;
+    border: 2px solid var(--comfy-input-bg);
+    border-radius: 50%;
+    transform: translate(-50%, -50%);
+    cursor: grab;
+    box-sizing: border-box;
+}
+
+.group-assistant-ui-container .padding-control .group-assistant-slider-handle:active {
+    cursor: grabbing;
+}
+
+.group-assistant-ui-container .padding-control .padding-value-container {
+    display: flex;
+    align-items: center;
+    width: 4.5em;
+    background: var(--p-inputtext-background);
+    border: 1px solid var(--p-inputtext-border-color);
+    border-radius: 4px;
+    padding: 2px 6px;
+    box-sizing: border-box;
+}
+
+.group-assistant-ui-container .padding-control .padding-value-input {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--input-text);
+    text-align: right;
+    padding-right: 2px;
+    font-size: inherit;
+    font-family: inherit;
+    -moz-appearance: textfield;
+}
+
+/* 禁用数字输入框的箭头 */
+.group-assistant-ui-container .padding-control .padding-value-input::-webkit-outer-spin-button,
+.group-assistant-ui-container .padding-control .padding-value-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+.group-assistant-ui-container .padding-control .padding-value-container span {
+    color: var(--input-text);
+    user-select: none;
+}
