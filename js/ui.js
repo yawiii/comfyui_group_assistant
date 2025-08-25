@@ -19,6 +19,7 @@ import { i18n } from "./utils/i18n.js";
 
 // 全局UI容器，以便在语言更改时重建
 let splitButtonContainer = null;
+let currentFloatingMenu = null;
 
 /**
  * 更新按钮状态
@@ -117,6 +118,12 @@ export function drawGroupHighlight(group, ctx, color) {
  * 创建或重建UI的主要函数
  */
 function buildFullUI() {
+    // 清理旧的浮动菜单
+    if (currentFloatingMenu && currentFloatingMenu.parentNode) {
+        currentFloatingMenu.parentNode.removeChild(currentFloatingMenu);
+        currentFloatingMenu = null;
+    }
+
     // 如果容器存在，清空它
     if (splitButtonContainer) {
         splitButtonContainer.innerHTML = '';
@@ -156,38 +163,70 @@ function buildFullUI() {
 
     // 创建下拉菜单
     const menu = document.createElement('div');
-    menu.className = 'p-splitbutton-menu no-transition';
+    menu.className = 'p-splitbutton-menu no-transition floating-menu';
     menu.style.display = 'none'; // 初始时隐藏菜单
+    menu.style.position = 'fixed'; // 使用固定定位
+    menu.style.zIndex = '10000'; // 设置高层级确保在最上层
+
+    // 将菜单添加到 body，使其不受父容器限制
+    document.body.appendChild(menu);
+    currentFloatingMenu = menu; // 保存引用以便清理
 
     // --- 菜单显示/隐藏逻辑 ---
     const toggleMenu = () => menu.classList.contains('p-splitbutton-menu-active') ? hideMenu() : showMenu();
     const showMenu = () => {
         // 计算菜单显示位置
         const buttonRect = splitButton.getBoundingClientRect();
-        const menuRect = menu.getBoundingClientRect();
         const viewportHeight = window.innerHeight;
+        const viewportWidth = window.innerWidth;
 
         // 检查菜单栏是否在底部
         const menuBar = app.menu?.element;
         const isMenuBarAtBottom = menuBar && menuBar.getBoundingClientRect().top > viewportHeight / 2;
 
-        // 显示菜单
+        // 显示菜单以获取其尺寸
         menu.style.display = 'block';
+        menu.style.visibility = 'hidden'; // 暂时隐藏以计算尺寸
+        const menuRect = menu.getBoundingClientRect();
+        menu.style.visibility = 'visible';
 
-        // 根据空间决定显示方向
+        // 计算水平位置
+        let left = buttonRect.left;
+        // 确保菜单不会超出右边界
+        if (left + menuRect.width > viewportWidth) {
+            left = buttonRect.right - menuRect.width;
+        }
+        // 确保菜单不会超出左边界
+        left = Math.max(0, left);
+
+        // 计算垂直位置
+        let top, bottom;
         if (isMenuBarAtBottom) {
             // 菜单栏在底部，菜单向上展开
-            menu.style.bottom = '100%';
+            bottom = viewportHeight - buttonRect.top;
+            menu.style.bottom = `${bottom}px`;
             menu.style.top = 'auto';
             menu.classList.add('menu-upward');
             menu.classList.remove('menu-downward');
         } else {
             // 菜单栏在顶部，菜单向下展开
-            menu.style.top = '100%';
-            menu.style.bottom = 'auto';
-            menu.classList.add('menu-downward');
-            menu.classList.remove('menu-upward');
+            top = buttonRect.bottom;
+            // 如果向下展开会超出底部边界，则向上展开
+            if (top + menuRect.height > viewportHeight) {
+                bottom = viewportHeight - buttonRect.top;
+                menu.style.bottom = `${bottom}px`;
+                menu.style.top = 'auto';
+                menu.classList.add('menu-upward');
+                menu.classList.remove('menu-downward');
+            } else {
+                menu.style.top = `${top}px`;
+                menu.style.bottom = 'auto';
+                menu.classList.add('menu-downward');
+                menu.classList.remove('menu-upward');
+            }
         }
+
+        menu.style.left = `${left}px`;
 
         requestAnimationFrame(() => {
             menu.classList.add('p-splitbutton-menu-active');
@@ -214,7 +253,7 @@ function buildFullUI() {
     // --- 组装 ---
     splitButton.appendChild(mainButton);
     splitButton.appendChild(menuButton);
-    splitButton.appendChild(menu);
+    // 注意：menu 已经添加到 document.body，不需要添加到 splitButton
 
     // 将新创建的UI添加到容器中
     splitButtonContainer.appendChild(splitButton);

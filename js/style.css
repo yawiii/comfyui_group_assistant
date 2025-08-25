@@ -58,10 +58,8 @@
 /* 2. 下拉菜单 (Dropdown Menu)
 /* -------------------------------------------------------------------------- */
 
-.group-assistant-ui-container .p-splitbutton-menu {
-    position: absolute;
-    left: 50%;
-    z-index: 1000;
+/* 菜单基础样式 */
+.p-splitbutton-menu {
     width: 350px;
     background: var(--p-content-background);
     border: 1px solid var(--p-menubar-submenu-border-color);
@@ -73,40 +71,49 @@
     visibility: hidden;
     opacity: 0;
     pointer-events: none;
+    transition: transform 0.15s ease-out, opacity 0.15s ease-out;
 }
 
-/* 向下展开的菜单样式 */
-.group-assistant-ui-container .p-splitbutton-menu.menu-downward {
-    top: 100%;
-    margin-top: 2px;
-    transform: translateX(-50%) translateY(-10px);
-    transition: transform 0.15s ease-out, opacity 0.15s ease-out, visibility 0s 0.15s;
+/* 原始（非浮动）菜单的定位 */
+.group-assistant-ui-container .p-splitbutton-menu {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 11000;
 }
 
-/* 向上展开的菜单样式 */
-.group-assistant-ui-container .p-splitbutton-menu.menu-upward {
-    bottom: 100%;
-    margin-bottom: 2px;
-    transform: translateX(-50%) translateY(10px);
-    transition: transform 0.15s ease-out, opacity 0.15s ease-out, visibility 0s 0.15s;
+/* 新的浮动菜单样式 */
+.p-splitbutton-menu.floating-menu {
+    position: fixed !important;
+    z-index: 10000 !important;
+}
+
+/* 向下展开的菜单动画 */
+.p-splitbutton-menu.menu-downward {
+    transform: translateY(-10px);
+}
+
+/* 向上展开的菜单动画 */
+.p-splitbutton-menu.menu-upward {
+    transform: translateY(10px);
 }
 
 /* 禁用加载时的初始动画 */
-.group-assistant-ui-container .p-splitbutton-menu.no-transition {
+.p-splitbutton-menu.no-transition {
     transition: none !important;
 }
 
 /* 菜单激活状态 */
-.group-assistant-ui-container .p-splitbutton-menu.p-splitbutton-menu-active {
+.p-splitbutton-menu.p-splitbutton-menu-active {
     visibility: visible;
     opacity: 1;
-    transform: translateX(-50%) translateY(0);
-    transition-delay: 0s;
+    transform: translateY(0);
     pointer-events: auto;
 }
 
 /* 菜单项通用样式 */
-.group-assistant-ui-container .p-splitbutton-menuitem {
+.group-assistant-ui-container .p-splitbutton-menuitem,
+.p-splitbutton-menu.floating-menu .p-splitbutton-menuitem {
     padding: 0 1rem;
     height: 40px;
     cursor: pointer;
@@ -119,15 +126,18 @@
     gap: 6px;
 }
 
-.group-assistant-ui-container .p-splitbutton-menuitem:last-child {
+.group-assistant-ui-container .p-splitbutton-menuitem:last-child,
+.p-splitbutton-menu.floating-menu .p-splitbutton-menuitem:last-child {
     margin-bottom: 0;
 }
 
-.group-assistant-ui-container .p-splitbutton-menuitem:hover {
+.group-assistant-ui-container .p-splitbutton-menuitem:hover,
+.p-splitbutton-menu.floating-menu .p-splitbutton-menuitem:hover {
     background-color: var(--comfy-menu-bg);
 }
 
-.group-assistant-ui-container .p-splitbutton-menuitem .p-menuitem-icon {
+.group-assistant-ui-container .p-splitbutton-menuitem .p-menuitem-icon,
+.p-splitbutton-menu.floating-menu .p-splitbutton-menuitem .p-menuitem-icon {
     margin-right: 0.5rem;
     width: 1rem;
     height: 1rem;
@@ -140,7 +150,8 @@
 /* -------------------------------------------------------------------------- */
 
 /* 插件信息行 */
-.p-splitbutton-menuitem.info-row {
+.p-splitbutton-menuitem.info-row,
+.floating-menu .p-splitbutton-menuitem.info-row {
     flex-direction: column;
     align-items: flex-start;
     height: auto;
@@ -152,36 +163,36 @@
     border-radius: 4px;
 }
 
-.info-row .plugin-title-container {
+.p-splitbutton-menu .info-row .plugin-title-container {
     display: flex;
     align-items: flex-end;
     gap: 8px;
     width: 100%;
 }
 
-.info-row .plugin-name {
+.p-splitbutton-menu .info-row .plugin-name {
     font-weight: bold;
     font-size: 16px;
 }
 
-.info-row .plugin-version {
+.p-splitbutton-menu .info-row .plugin-version {
     font-size: 12px;
     color: var(--p-text-muted-color);
     margin-left: auto;
 }
 
-.info-row .badges-container {
+.p-splitbutton-menu .info-row .badges-container {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
-.info-row .badges-container img {
+.p-splitbutton-menu .info-row .badges-container img {
     height: 20px;
     display: block;
 }
 
-.info-row-separator {
+.p-splitbutton-menu .info-row-separator {
     width: 100%;
     height: 1px;
     background-color: var(--p-content-border-color);
@@ -216,12 +227,14 @@
     text-align: right;
 }
 
-.group-assistant-ui-container .sensitivity-control .group-assistant-slider-container {
+.group-assistant-ui-container .sensitivity-control .group-assistant-slider-container,
+.p-splitbutton-menu .sensitivity-control .group-assistant-slider-container {
     flex-grow: 1;
     margin: 0 8px;
 }
 
-.group-assistant-ui-container .sensitivity-control .group-assistant-slider {
+.group-assistant-ui-container .sensitivity-control .group-assistant-slider,
+.p-splitbutton-menu .sensitivity-control .group-assistant-slider {
     position: relative;
     height: 4px;
     background: var(--comfy-input-bg);
@@ -230,7 +243,8 @@
     /* 轨道可点击 */
 }
 
-.group-assistant-ui-container .sensitivity-control .group-assistant-slider-range {
+.group-assistant-ui-container .sensitivity-control .group-assistant-slider-range,
+.p-splitbutton-menu .sensitivity-control .group-assistant-slider-range {
     position: absolute;
     height: 100%;
     background: var(--p-button-primary-background);
@@ -239,7 +253,8 @@
     /* 确保点击事件在轨道上触发 */
 }
 
-.group-assistant-ui-container .sensitivity-control .group-assistant-slider-handle {
+.group-assistant-ui-container .sensitivity-control .group-assistant-slider-handle,
+.p-splitbutton-menu .sensitivity-control .group-assistant-slider-handle {
     position: absolute;
     top: 50%;
     width: 16px;
@@ -253,14 +268,16 @@
     box-sizing: border-box;
 }
 
-.group-assistant-ui-container .sensitivity-control .group-assistant-slider-handle:active {
+.group-assistant-ui-container .sensitivity-control .group-assistant-slider-handle:active,
+.p-splitbutton-menu .sensitivity-control .group-assistant-slider-handle:active {
     cursor: grabbing;
     /* 正在抓取 */
 }
 
 
 /* 灵敏度输入框样式 */
-.group-assistant-ui-container .sensitivity-control .sensitivity-value-container {
+.group-assistant-ui-container .sensitivity-control .sensitivity-value-container,
+.p-splitbutton-menu .sensitivity-control .sensitivity-value-container {
     display: flex;
     align-items: center;
     width: 4.5em;
@@ -272,7 +289,8 @@
     box-sizing: border-box;
 }
 
-.group-assistant-ui-container .sensitivity-control .sensitivity-value-input {
+.group-assistant-ui-container .sensitivity-control .sensitivity-value-input,
+.p-splitbutton-menu .sensitivity-control .sensitivity-value-input {
     width: 100%;
     background: transparent;
     border: none;
@@ -287,18 +305,22 @@
 }
 
 .group-assistant-ui-container .sensitivity-control .sensitivity-value-input::-webkit-outer-spin-button,
-.group-assistant-ui-container .sensitivity-control .sensitivity-value-input::-webkit-inner-spin-button {
+.group-assistant-ui-container .sensitivity-control .sensitivity-value-input::-webkit-inner-spin-button,
+.p-splitbutton-menu .sensitivity-control .sensitivity-value-input::-webkit-outer-spin-button,
+.p-splitbutton-menu .sensitivity-control .sensitivity-value-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-.group-assistant-ui-container .sensitivity-control .sensitivity-value-container span {
+.group-assistant-ui-container .sensitivity-control .sensitivity-value-container span,
+.p-splitbutton-menu .sensitivity-control .sensitivity-value-container span {
     color: var(--input-text);
     user-select: none;
 }
 
 /* 自动开启开关 */
-.group-assistant-ui-container .group-assistant-toggleswitch {
+.group-assistant-ui-container .group-assistant-toggleswitch,
+.p-splitbutton-menu .group-assistant-toggleswitch {
     display: inline-block;
     position: relative;
     width: 40px;
@@ -306,7 +328,8 @@
     margin-left: auto;
 }
 
-.group-assistant-ui-container .group-assistant-toggleswitch .group-assistant-toggleswitch-slider {
+.group-assistant-ui-container .group-assistant-toggleswitch .group-assistant-toggleswitch-slider,
+.p-splitbutton-menu .group-assistant-toggleswitch .group-assistant-toggleswitch-slider {
     position: absolute;
     cursor: pointer;
     top: 0;
@@ -318,7 +341,8 @@
     transition: background-color 0.2s, border-color 0.2s, box-shadow 0.2s;
 }
 
-.group-assistant-ui-container .group-assistant-toggleswitch .group-assistant-toggleswitch-slider:before {
+.group-assistant-ui-container .group-assistant-toggleswitch .group-assistant-toggleswitch-slider:before,
+.p-splitbutton-menu .group-assistant-toggleswitch .group-assistant-toggleswitch-slider:before {
     position: absolute;
     content: "";
     height: 16px;
@@ -331,20 +355,24 @@
     transform: translateY(-50%);
 }
 
-.group-assistant-ui-container .group-assistant-toggleswitch.group-assistant-toggleswitch-checked .group-assistant-toggleswitch-slider {
+.group-assistant-ui-container .group-assistant-toggleswitch.group-assistant-toggleswitch-checked .group-assistant-toggleswitch-slider,
+.p-splitbutton-menu .group-assistant-toggleswitch.group-assistant-toggleswitch-checked .group-assistant-toggleswitch-slider {
     background: var(--p-button-primary-background);
 }
 
-.group-assistant-ui-container .group-assistant-toggleswitch.group-assistant-toggleswitch-checked .group-assistant-toggleswitch-slider:before {
+.group-assistant-ui-container .group-assistant-toggleswitch.group-assistant-toggleswitch-checked .group-assistant-toggleswitch-slider:before,
+.p-splitbutton-menu .group-assistant-toggleswitch.group-assistant-toggleswitch-checked .group-assistant-toggleswitch-slider:before {
     transform: translateX(16px) translateY(-50%);
     background: var(--p-panel-background);
 }
 
-.group-assistant-ui-container .group-assistant-toggleswitch:not(.p-disabled):hover .group-assistant-toggleswitch-slider {
+.group-assistant-ui-container .group-assistant-toggleswitch:not(.p-disabled):hover .group-assistant-toggleswitch-slider,
+.p-splitbutton-menu .group-assistant-toggleswitch:not(.p-disabled):hover .group-assistant-toggleswitch-slider {
     border-color: var(--border-color-hover);
 }
 
-.group-assistant-ui-container .group-assistant-toggleswitch.group-assistant-toggleswitch-checked:not(.p-disabled):hover .group-assistant-toggleswitch-slider {
+.group-assistant-ui-container .group-assistant-toggleswitch.group-assistant-toggleswitch-checked:not(.p-disabled):hover .group-assistant-toggleswitch-slider,
+.p-splitbutton-menu .group-assistant-toggleswitch.group-assistant-toggleswitch-checked:not(.p-disabled):hover .group-assistant-toggleswitch-slider {
     background: var(--primary-hover-bg);
 }
 
@@ -471,13 +499,15 @@
 }
 
 /* 添加滑块容器样式 */
-.group-assistant-ui-container .padding-control .group-assistant-slider-container {
+.group-assistant-ui-container .padding-control .group-assistant-slider-container,
+.p-splitbutton-menu .padding-control .group-assistant-slider-container {
     flex-grow: 1;
     margin: 0 8px;
 }
 
 /* 添加滑块样式 */
-.group-assistant-ui-container .padding-control .group-assistant-slider {
+.group-assistant-ui-container .padding-control .group-assistant-slider,
+.p-splitbutton-menu .padding-control .group-assistant-slider {
     position: relative;
     height: 4px;
     background: var(--comfy-input-bg);
@@ -486,7 +516,8 @@
 }
 
 /* 添加滑块范围样式 */
-.group-assistant-ui-container .padding-control .group-assistant-slider-range {
+.group-assistant-ui-container .padding-control .group-assistant-slider-range,
+.p-splitbutton-menu .padding-control .group-assistant-slider-range {
     position: absolute;
     height: 100%;
     background: var(--p-button-primary-background);
@@ -495,7 +526,8 @@
 }
 
 /* 添加滑块手柄样式 */
-.group-assistant-ui-container .padding-control .group-assistant-slider-handle {
+.group-assistant-ui-container .padding-control .group-assistant-slider-handle,
+.p-splitbutton-menu .padding-control .group-assistant-slider-handle {
     position: absolute;
     top: 50%;
     width: 16px;
@@ -508,11 +540,13 @@
     box-sizing: border-box;
 }
 
-.group-assistant-ui-container .padding-control .group-assistant-slider-handle:active {
+.group-assistant-ui-container .padding-control .group-assistant-slider-handle:active,
+.p-splitbutton-menu .padding-control .group-assistant-slider-handle:active {
     cursor: grabbing;
 }
 
-.group-assistant-ui-container .padding-control .padding-value-container {
+.group-assistant-ui-container .padding-control .padding-value-container,
+.p-splitbutton-menu .padding-control .padding-value-container {
     display: flex;
     align-items: center;
     width: 4.5em;
@@ -523,7 +557,8 @@
     box-sizing: border-box;
 }
 
-.group-assistant-ui-container .padding-control .padding-value-input {
+.group-assistant-ui-container .padding-control .padding-value-input,
+.p-splitbutton-menu .padding-control .padding-value-input {
     width: 100%;
     background: transparent;
     border: none;
@@ -538,12 +573,15 @@
 
 /* 禁用数字输入框的箭头 */
 .group-assistant-ui-container .padding-control .padding-value-input::-webkit-outer-spin-button,
-.group-assistant-ui-container .padding-control .padding-value-input::-webkit-inner-spin-button {
+.group-assistant-ui-container .padding-control .padding-value-input::-webkit-inner-spin-button,
+.p-splitbutton-menu .padding-control .padding-value-input::-webkit-outer-spin-button,
+.p-splitbutton-menu .padding-control .padding-value-input::-webkit-inner-spin-button {
     -webkit-appearance: none;
     margin: 0;
 }
 
-.group-assistant-ui-container .padding-control .padding-value-container span {
+.group-assistant-ui-container .padding-control .padding-value-container span,
+.p-splitbutton-menu .padding-control .padding-value-container span {
     color: var(--input-text);
     user-select: none;
 }
