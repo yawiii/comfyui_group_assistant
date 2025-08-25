@@ -34,9 +34,3 @@ Group Assistant solves the problem that the native group function of ComfyUI mis
 
 
 
-
-
-## 🫰🏻💖如果插件对您有帮助，不妨请我喝杯咖啡吧~💖🫰🏻
-
-
-![赞赏码](https://github.com/user-attachments/assets/3072ba94-a910-4b32-a874-0aed0662a02f)
