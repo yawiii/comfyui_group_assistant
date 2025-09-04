@@ -111,21 +111,25 @@ export function updateGroupBoundary(group, updateParents = true, processedGroups
         // 收集所有需要考虑的元素（节点和子组）
         const allElements = [];
 
-        // 添加节点
+        // 添加节点（过滤已被删除或已从图中移除的节点）
         if (group._nodes && group._nodes.length > 0) {
-            allElements.push(...group._nodes.filter(node => node != null));
+            allElements.push(
+                ...group._nodes.filter(node => node != null && node.graph)
+            );
         }
 
-        // 添加子组
+        // 添加子项（子组与子节点），并过滤无效对象
         if (group._children) {
             for (const child of group._children) {
                 if (!child) continue;
 
                 if (child instanceof window.LGraphGroup) {
                     allElements.push(child);
-                } else if (child instanceof window.LGraphNode && !allElements.includes(child)) {
-                    // 确保所有节点类型的子元素都被考虑
-                    allElements.push(child);
+                } else if (child instanceof window.LGraphNode) {
+                    // 仅包含仍隶属于图的节点
+                    if (child.graph && !allElements.includes(child)) {
+                        allElements.push(child);
+                    }
                 }
             }
         }

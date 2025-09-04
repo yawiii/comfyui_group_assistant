@@ -939,9 +939,48 @@ app.registerExtension({
                     }
                 };
 
-                // 监听组的删除 - 劫持 LGraph 的 remove 方法
+                // 监听删除 - 劫持 LGraph 的 remove 方法（节点与组均处理）
                 const originalRemove = app.graph.remove;
                 app.graph.remove = function (node_or_group) {
+                    // 新增：如果是节点且功能已启用，先清理父组并在删除后刷新边界
+                    if (state.hijackEnabled && node_or_group instanceof LiteGraph.LGraphNode) {
+                        try {
+                            const parentGroup = node_or_group.group;
+                            if (parentGroup && !parentGroup._isDeleted) {
+                                if (parentGroup._nodes) {
+                                    parentGroup._nodes = parentGroup._nodes.filter(n => n !== node_or_group);
+                                }
+                                if (parentGroup._children) {
+                                    parentGroup._children.delete(node_or_group);
+                                }
+                                node_or_group.group = null;
+                            }
+
+                            const result = originalRemove.apply(this, arguments);
+
+                            // 删除完成后刷新受影响的组边界（包含祖先）
+                            if (parentGroup && !parentGroup._isDeleted) {
+                                setTimeout(() => {
+                                    try {
+                                        updateGroupBoundary(parentGroup, true, null, true);
+                                        let p = parentGroup.group;
+                                        while (p && !p._isDeleted) {
+                                            updateGroupBoundary(p, true, null, true);
+                                            p = p.group;
+                                        }
+                                        if (app.canvas) app.canvas.setDirty(true, true);
+                                    } catch (err) {
+                                        logger.error("删除节点后更新组边界失败:", err);
+                                    }
+                                }, 0);
+                            }
+                            return result;
+                        } catch (error) {
+                            logger.error("删除节点时出错:", error);
+                            return originalRemove.apply(this, arguments);
+                        }
+                    }
+
                     // 如果是组且功能已启用，处理其子节点和子组
                     if (node_or_group instanceof LiteGraph.LGraphGroup && state.hijackEnabled) {
                         logger.debug(`检测到组删除: ${node_or_group.title || "未命名组"}`);
