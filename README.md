@@ -3,9 +3,9 @@
 [![Bilibili](https://img.shields.io/badge/-%E6%8F%92%E4%BB%B6%E4%BB%8B%E7%BB%8D-blue?logo=bilibili&logoColor=%23E1E1E&labelColor=%23E1E1E2&color=%2307A3D7)](https://space.bilibili.com/520680644)
 
 
-阿组小助手（Group Assistant），解决comfyUI原生组功能在拖动时，误带走无关节点的问题。同时实现可以自动调整组边界，让节点整理井井有条。让组功能更好用。
+阿组小助手（Group Assistant），让comfyUI组更好用，通过拖放操作建立组关系，无需手动调整组边界，实现组边界自动包裹住组内元素。
 
-Group Assistant solves the problem that the native group function of ComfyUI mistakenly drags irrelevant nodes when dragging. It also realizes the automatic adjustment of group boundaries, making node arrangement neat and orderly. This makes the group function more useful.
+Group Assistant, make the comfyUI group function more user-friendly, establish group relationships through drag-and-drop operations, no need to manually adjust group boundaries, achieve automatic wrapping of group boundaries around elements within the group.
 
 
 ## ✨ 功能特性
