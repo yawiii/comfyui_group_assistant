@@ -667,7 +667,7 @@ function setupCanvasDrawListeners(canvas) {
  * @param {HTMLCanvasElement} canvasElement
  */
 function setupDropListeners(canvasElement) {
-    const onPointerUp = function () {
+    const onPointerUp = function (e) {
         // 如果Shift键被按下，跳过拖放操作
         if (state.shiftKeyPressed) {
             return;
@@ -677,14 +677,33 @@ function setupDropListeners(canvasElement) {
         //     return;
         // }
 
-        // 拖放结束，检查是否是有效的放置目标
-        if (!state.hijackEnabled || !state.hoveredGroup) {
+        // 仅在开启劫持时处理
+        if (!state.hijackEnabled) {
             return;
         }
 
-        const targetGroup = state.hoveredGroup;
+        // 新前端：优先使用指针位置解析目标组
+        let targetGroup = null;
+        try {
+            if (app?.canvas && app?.graph && e) {
+                app.canvas.adjustMouseEvent?.(e);
+                if (typeof e.canvasX === 'number' && typeof e.canvasY === 'number') {
+                    targetGroup = app.graph.getGroupOnPos(e.canvasX, e.canvasY) || null;
+                }
+            }
+        } catch (err) {
+            logger.error("根据指针位置解析目标组失败:", err);
+        }
 
-        // 使用 `getCurrentSelection` 获取所有选中的对象，这是处理多选的正确方式
+        // 回退旧逻辑：使用悬停组
+        if (!targetGroup) {
+            targetGroup = state.hoveredGroup || null;
+        }
+
+        // 无有效目标组则返回
+        if (!targetGroup) return;
+
+        // 使用 `getCurrentSelection` 获取所有选中的对象（包含节点与组）
         const { selectedNodes, selectedGroups } = getCurrentSelection(true);
 
         // 如果有多个选中项，优先处理多选
@@ -692,17 +711,13 @@ function setupDropListeners(canvasElement) {
             logger.debug(`将 ${selectedNodes.length} 个节点和 ${selectedGroups.length} 个组通过拖放添加到组 '${targetGroup.title}'`);
             addSelectedItemsToGroup(targetGroup, selectedNodes, selectedGroups);
         }
-        // 如果没有多选，则可能是单项拖动，使用 draggingElement 作为备选
+        // 如果没有多选，尝试使用 draggingElement 作为备选
         else if (state.draggingElement) {
             const { draggingElement } = state;
-
-            // 不能将一个元素放入其自身
-            if (draggingElement === targetGroup) return;
-
+            if (draggingElement === targetGroup) return; // 不能将一个元素放入其自身
             logger.debug(`将单个拖动元素 '${draggingElement.title}' 添加到组 '${targetGroup.title}'`);
-
-            const nodesToAdd = draggingElement instanceof window.LGraphNode ? [draggingElement] : [];
-            const groupsToAdd = draggingElement instanceof window.LGraphGroup ? [draggingElement] : [];
+            const nodesToAdd = (typeof window !== 'undefined' && window.LGraphNode && draggingElement instanceof window.LGraphNode) ? [draggingElement] : [];
+            const groupsToAdd = (typeof window !== 'undefined' && window.LGraphGroup && draggingElement instanceof window.LGraphGroup) ? [draggingElement] : [];
             addSelectedItemsToGroup(targetGroup, nodesToAdd, groupsToAdd);
         }
 

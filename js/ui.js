@@ -353,7 +353,7 @@ function createMenuContent(menu, hideMenu) {
                 <img alt="GitHub" src="https://img.shields.io/badge/-Yawiii-blue?style=flat&logo=github&logoColor=black&labelColor=%23E1E1E2&color=%2307A3D7">
             </a>
             <a href="https://space.bilibili.com/520680644" target="_blank">
-                <img alt="Bilibili" src="https://img.shields.io/badge/-%E6%8F%92%E4%BB%B6%E4%BB%8B%E7%BB%8D-blue?logo=bilibili&logoColor=%23E1E1E&labelColor=%23E1E1E2&color=%2307A3D7">
+                <img alt="Bilibili" src="https://img.shields.io/badge/%E4%BD%BF%E7%94%A8%E6%95%99%E7%A8%8B-blue?style=flat&logo=bilibili&logoColor=2300A5DC&labelColor=%23FFFFFF&color=%2307A3D7">
             </a>
         </div>
     `;
