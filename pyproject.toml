@@ -1,7 +1,7 @@
 [project]
 name = "group-assistant"
-version = "1.0.7"
-description = "阿组小助手（Group Assistant）,让comfyUI组更好用，通过拖放操作建立组关系，无需手动调整组边界，实现组边界自动包裹住组内元素。Group Assistant, make the comfyUI group function more user-friendly, establish group relationships through drag-and-drop operations, no need to manually adjust group boundaries, achieve automatic wrapping of group boundaries around elements within the group."
+version = "1.0.8"
+description = "阿组小助手（Group Assistant）可以让组自动包裹组节点，实现自动调整组边界，让组功能更好用。Group Assistant can automatically wrap group nodes, achieve automatic adjustment of group boundaries, making group functions more useful."
 readme = "README.md"
 license = {text = "GNU General Public License v3"}
 classifiers = [
