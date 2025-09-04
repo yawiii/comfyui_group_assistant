@@ -1,7 +1,7 @@
 [project]
 name = "group-assistant"
-version = "1.0.6"
-description = "阿组小助手（Group Assistant）,solves the problem that the native group function of ComfyUI mistakenly drags irrelevant nodes when dragging. It also realizes the automatic adjustment of group boundaries, making node arrangement neat and orderly. This makes the group function more useful."
+version = "1.0.7"
+description = "阿组小助手（Group Assistant）,让comfyUI组更好用，通过拖放操作建立组关系，无需手动调整组边界，实现组边界自动包裹住组内元素。Group Assistant, make the comfyUI group function more user-friendly, establish group relationships through drag-and-drop operations, no need to manually adjust group boundaries, achieve automatic wrapping of group boundaries around elements within the group."
 readme = "README.md"
 license = {text = "GNU General Public License v3"}
 classifiers = [
@@ -19,4 +19,4 @@ dependencies = {file = ["requirements.txt"]}
 
 PublisherId = "yawiii"
 DisplayName = "Group Assistant" 
-Icon = "" 
+Icon = "https://raw.githubusercontent.com/yawiii/comfyui_group_assistant/refs/heads/main/icon.png" 
