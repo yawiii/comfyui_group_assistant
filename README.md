@@ -1,3 +1,4 @@
+（暂停维护，等 comfyUI 前端版本稳定）
 # ComfyUI Group Assistant 💡阿组小助手
 
 [![Bilibili](https://img.shields.io/badge/-%E6%8F%92%E4%BB%B6%E4%BB%8B%E7%BB%8D-blue?logo=bilibili&logoColor=%23E1E1E&labelColor=%23E1E1E2&color=%2307A3D7)](https://space.bilibili.com/520680644)
